@@ -107,10 +107,10 @@ public class Source {
             scoreBeforeThreeThrows = scores[currentPlayer].getCurrentGameScore(); //store score before throws to make sure it can be reset
 
             //simulates three throws; exits earlier if won or invalid throw
-            for (int dartThrows = 0; dartThrows < 3; dartThrows++) {
+            for (Dart dart : Dart.values()) {
                 int scoreCurrPlayer = scores[currentPlayer].getCurrentGameScore();  //score of current player
 
-                scoreAchieved = decide.actualTargetHit(scoreCurrPlayer, board, currentTurnPlayer, decide);  //returns score hit
+                scoreAchieved = decide.actualTargetHit(dart, scoreCurrPlayer, board, currentTurnPlayer);  //returns score hit
 
                 System.out.println(String.format("%s : %s - %s", currentPlayer, scoreCurrPlayer, scoreAchieved.score()));
 
@@ -118,7 +118,7 @@ public class Source {
                 if (scoreCurrPlayer - scoreAchieved.score() >= 2) {
                     scores[currentPlayer].setCurrentGameScore(scoreCurrPlayer - scoreAchieved.score());
                     //change over player only if third throw done
-                    if(dartThrows == 2) {
+                    if(dart == Dart.SECOND) {
                         playerZeroThrows = !playerZeroThrows;
                     }
                 }
