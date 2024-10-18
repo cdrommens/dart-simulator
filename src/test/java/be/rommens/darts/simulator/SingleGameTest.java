@@ -16,4 +16,11 @@ public class SingleGameTest {
         singleGame.calculateStatistics();
     }
 
+    @Test
+    void testBatch() {
+        while (true) {
+            singleGame.playGame(new Player("Humphries",25,50,95,42,44));
+        }
+    }
+
 }

@@ -103,14 +103,14 @@ public class Source {
 
             //get current player's current score
             Player currentTurnPlayer = players[currentPlayer];
-            SingleScore scoreAchieved;
+            Throw scoreAchieved;
             scoreBeforeThreeThrows = scores[currentPlayer].getCurrentGameScore(); //store score before throws to make sure it can be reset
 
             //simulates three throws; exits earlier if won or invalid throw
             for (Dart dart : Dart.values()) {
                 int scoreCurrPlayer = scores[currentPlayer].getCurrentGameScore();  //score of current player
 
-                scoreAchieved = decide.actualTargetHit(dart, scoreCurrPlayer, board, currentTurnPlayer);  //returns score hit
+                scoreAchieved = decide.actualTargetHit(dart, scoreCurrPlayer, currentTurnPlayer);  //returns score hit
 
                 System.out.println(String.format("%s : %s - %s", currentPlayer, scoreCurrPlayer, scoreAchieved.score()));
 

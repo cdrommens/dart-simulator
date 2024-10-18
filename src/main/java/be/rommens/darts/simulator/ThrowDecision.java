@@ -6,9 +6,11 @@ import org.springframework.stereotype.Component;
 public class ThrowDecision {
 
     private final OptimalPath optimalPath;
+    private final Board board;
 
-    public ThrowDecision(OptimalPath optimalPath) {
+    public ThrowDecision(OptimalPath optimalPath, Board board) {
         this.optimalPath = optimalPath;
+        this.board = board;
     }
 
     //TODO : improve optimal path with input from https://dartscheckoutassistant.com/2021/01/26/a-guide-to-reaching-a-checkout/
@@ -27,7 +29,7 @@ public class ThrowDecision {
     }
 
     //fn returns score of target actually hit
-    public SingleScore actualTargetHit(Dart dart, int currentScore, Board board, Player player) {
+    public Throw actualTargetHit(Dart dart, int currentScore, Player player) {
         //takes score of current player, board object, current player object,
         //ThrowDecision object, and bool for validity check in case this is a final throw
 
@@ -47,7 +49,11 @@ public class ThrowDecision {
                 return board.throwTreble(aim / 3, player.accuracyTreble());
             } else {
                 //throw single aiming at aim with hitting prob. of the respective player, which is different if aim is 25 than otherwise
-                return board.throwSingle(aim, player.accuracySingle(), player.accuracyOuter());
+                if (aim == 50 || aim > 20 && aim % 2 == 0) { //see last dart in optimal path (double should now be single)
+                    return board.throwSingle(aim / 2, player.accuracyBull(), player.accuracyOuter());
+                } else {
+                    return board.throwSingle(aim, player.accuracySingle(), player.accuracyOuter());
+                }
             }
         }
     }
