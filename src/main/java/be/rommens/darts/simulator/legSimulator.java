@@ -3,77 +3,54 @@ package be.rommens.darts.simulator;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class legSimulator {
 
-    private final ThrowDecision decide;
+    private static final Logger log = LoggerFactory.getLogger(legSimulator.class);
 
-    private final List<Turn> turns = new ArrayList<>();
-    private boolean finished = false;
+    private final ThrowDecision decide;
 
     public legSimulator(ThrowDecision decide) {
         this.decide = decide;
     }
 
-    public void playGame(Player player) {
-        reset();
+    public List<Turn> playGame(Player player) {
+        List<Turn> turns = new ArrayList<>();
+        boolean finished = false;
         while (!finished) {
-            Turn turn = new Turn(initializeScore());
-            System.out.printf("[DEBUG] : %s%n", turn);
+            Turn turn = new Turn(initializeScore(turns));
+            log.debug(turn.toString());
+
             for (Dart dart : Dart.values()) {
                 int scoreCurrPlayer = turn.getScoreLeft();
 
-                Throw scoreAchieved = decide.actualTargetHit(dart, scoreCurrPlayer, player);  //returns score hit
-                turn.addThrow(scoreAchieved);
+                Throw simulatedThrow = decide.simulateThrow(dart, scoreCurrPlayer, player);  //returns score hit
+                turn.addThrow(simulatedThrow);
 
-                System.out.printf("[DEBUG] : %s%n", turn);
-                System.out.printf("%s | %s : %s - %s (%s)%n", dart.ordinal()+1, player.name(), scoreCurrPlayer, scoreAchieved.score(), scoreAchieved.isFinishingShot());
+                log.debug(turn.toString());
+                log.debug("{} | {} : {} - {} {}", dart.ordinal()+1, player.name(), scoreCurrPlayer, simulatedThrow.score(), simulatedThrow.isFinishingShot());
 
-                if ((scoreCurrPlayer - scoreAchieved.score() == 1 || scoreCurrPlayer - scoreAchieved.score() < 0) || (
-                     scoreCurrPlayer - scoreAchieved.score() == 0 && !scoreAchieved.isFinishingThrow())) {
-                    switch (dart){
-                        case FIRST -> {
-                            turn.addThrow(new Throw(0, scoreAchieved.isFinishingThrow(), scoreAchieved.isFinishingShot(), false));
-                            turn.addThrow(new Throw(0, scoreAchieved.isFinishingThrow(), scoreAchieved.isFinishingShot(), false));
-                        }
-                        case SECOND -> turn.addThrow(new Throw(0, scoreAchieved.isFinishingThrow(), scoreAchieved.isFinishingShot(), false));
-                    }
+                int remainingScore = scoreCurrPlayer - simulatedThrow.score();
+                if ((remainingScore == 1 || remainingScore < 0) || (remainingScore == 0 && !simulatedThrow.isFinishingThrow())) {
+                    fillBustedThrows(dart, turn, simulatedThrow);
                     turn.markAsBusted();
                     break;
-                } else if (scoreCurrPlayer - scoreAchieved.score() == 0 && scoreAchieved.isFinishingThrow()) {
-                    System.out.printf("%s WON%n", player.name());
+                }
+                if (remainingScore == 0) {
                     finished = true;
                     break;
                 }
             }
             turns.add(turn);
         }
+        return turns;
     }
 
-    //TODO : Treble less visits: Het aantal beurten dat gegooid is met een score onder de 60. Dus zonder een triple 20, 19, 18 of 17. Wanneer men onder de 200 punten komt en richting het wegzetten gaat, worden deze ‘visits’ niet meer geteld.
-    public void calculateStatistics() {
-        System.out.println("Number of darts thrown : " + turns.stream().flatMap(Turn::getThrows).toList().size());
-        System.out.println("Average : " + 501 / turns.stream().flatMap(Turn::getThrows).toList().size() * 3);
-        System.out.println("First 9 Average : " +
-                turns.stream()
-                        .flatMap(Turn::getThrows)
-                        .limit(9)
-                        .map(Throw::score)
-                        .reduce(0, Integer::sum)/ 9 * 3);
-        System.out.println("Checkout% : " +
-                (1.0/ turns.stream()
-                        .flatMap(Turn::getThrows)
-                        .filter(Throw::isFinishingShot)
-                        .toList().size()) * 100);
-        System.out.println("180's : " +
-                turns.stream()
-                        .filter(Turn::is180)
-                        .count());
-    }
-
-    private int initializeScore() {
+    private int initializeScore(List<Turn> turns) {
         return turns.stream()
                 .map(Turn::getScoreLeft)
                 .filter(score -> score >= 0)
@@ -81,8 +58,13 @@ public class legSimulator {
                 .orElse(501);
     }
 
-    private void reset() {
-        turns.clear();
-        finished = false;
+    private void fillBustedThrows(Dart dart, Turn turn, Throw simulatedThrow) {
+        switch (dart){
+            case FIRST -> {
+                turn.addThrow(new Throw(0, simulatedThrow.isFinishingThrow(), simulatedThrow.isFinishingShot(), false));
+                turn.addThrow(new Throw(0, simulatedThrow.isFinishingThrow(), simulatedThrow.isFinishingShot(), false));
+            }
+            case SECOND -> turn.addThrow(new Throw(0, simulatedThrow.isFinishingThrow(), simulatedThrow.isFinishingShot(), false));
+        }
     }
 }

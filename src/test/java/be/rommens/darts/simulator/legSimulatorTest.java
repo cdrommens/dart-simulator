@@ -12,8 +12,11 @@ public class legSimulatorTest {
 
     @Test
     void singleGameTest() {
-        legSimulator.playGame(new Player("Humphries",25,50,95,42,44));
-        legSimulator.calculateStatistics();
+        var leg = legSimulator.playGame(new Player("Humphries",25,50,95,42,44));
+        for(Turn turn : leg) {
+            System.out.println(turn.getStartScore() + " : " + turn.getThrows().map(Throw::score).reduce(0, Integer::sum) + " (" + turn + ")");
+        }
+        Statistics.calculate(leg).write();
     }
 
     @Test

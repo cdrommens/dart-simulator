@@ -29,7 +29,7 @@ public class ThrowDecision {
     }
 
     //fn returns score of target actually hit
-    public Throw actualTargetHit(Dart dart, int currentScore, Player player) {
+    public Throw simulateThrow(Dart dart, int currentScore, Player player) {
         //takes score of current player, board object, current player object,
         //ThrowDecision object, and bool for validity check in case this is a final throw
 

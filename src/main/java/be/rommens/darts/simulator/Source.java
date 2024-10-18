@@ -110,7 +110,7 @@ public class Source {
             for (Dart dart : Dart.values()) {
                 int scoreCurrPlayer = scores[currentPlayer].getCurrentGameScore();  //score of current player
 
-                scoreAchieved = decide.actualTargetHit(dart, scoreCurrPlayer, currentTurnPlayer);  //returns score hit
+                scoreAchieved = decide.simulateThrow(dart, scoreCurrPlayer, currentTurnPlayer);  //returns score hit
 
                 System.out.println(String.format("%s : %s - %s", currentPlayer, scoreCurrPlayer, scoreAchieved.score()));
 

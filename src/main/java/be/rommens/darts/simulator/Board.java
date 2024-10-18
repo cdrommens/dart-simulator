@@ -41,7 +41,7 @@ public class Board {
         // return result of throwing for treble d with accuracy p% ; iV stands for "is this valid as a finishing throw?".
         // This is unchanged and hence would not have been needed
         int r = ThreadLocalRandom.current().nextInt(100);
-        System.out.printf("(%s - %s) ", r, accuracyPercentage);
+        //System.out.printf("(%s - %s) ", r, accuracyPercentage);
 
         if (r < accuracyPercentage) {
             return new Throw(3 * treble, false, false, false);

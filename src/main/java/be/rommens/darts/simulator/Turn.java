@@ -36,6 +36,10 @@ public class Turn {
         return scores.stream().allMatch(t -> t.score() == 60);
     }
 
+    public Integer getStartScore() {
+        return startScore;
+    }
+
     @Override
     public String toString() {
         return "Turn{" +
