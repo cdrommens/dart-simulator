@@ -49,7 +49,7 @@ public class ThrowDecision {
                 return board.throwTreble(aim / 3, player.accuracyTreble());
             } else {
                 //throw single aiming at aim with hitting prob. of the respective player, which is different if aim is 25 than otherwise
-                if (aim == 50 || aim > 20 && aim % 2 == 0) { //see last dart in optimal path (double should now be single)
+                if (aim > 20 && aim % 2 == 0) { //see last dart in optimal path (double should now be single)
                     return board.throwSingle(aim / 2, player.accuracyBull(), player.accuracyOuter());
                 } else {
                     return board.throwSingle(aim, player.accuracySingle(), player.accuracyOuter());

@@ -6,14 +6,14 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SingleGame {
+public class legSimulator {
 
     private final ThrowDecision decide;
 
     private final List<Turn> turns = new ArrayList<>();
     private boolean finished = false;
 
-    public SingleGame(ThrowDecision decide) {
+    public legSimulator(ThrowDecision decide) {
         this.decide = decide;
     }
 
@@ -21,18 +21,18 @@ public class SingleGame {
         reset();
         while (!finished) {
             Turn turn = new Turn(initializeScore());
-            System.out.println(String.format("[DEBUG] : %s", turn));
+            System.out.printf("[DEBUG] : %s%n", turn);
             for (Dart dart : Dart.values()) {
                 int scoreCurrPlayer = turn.getScoreLeft();
 
                 Throw scoreAchieved = decide.actualTargetHit(dart, scoreCurrPlayer, player);  //returns score hit
                 turn.addThrow(scoreAchieved);
 
-                System.out.println(String.format("[DEBUG] : %s", turn));
-                System.out.println(String.format("%s | %s : %s - %s (%s)", dart.ordinal()+1, player.name(), scoreCurrPlayer, scoreAchieved.score(), scoreAchieved.isFinishingShot()));
+                System.out.printf("[DEBUG] : %s%n", turn);
+                System.out.printf("%s | %s : %s - %s (%s)%n", dart.ordinal()+1, player.name(), scoreCurrPlayer, scoreAchieved.score(), scoreAchieved.isFinishingShot());
 
                 if ((scoreCurrPlayer - scoreAchieved.score() == 1 || scoreCurrPlayer - scoreAchieved.score() < 0) || (
-                        scoreCurrPlayer - scoreAchieved.score() == 0 && !scoreAchieved.isFinishingThrow())) {
+                     scoreCurrPlayer - scoreAchieved.score() == 0 && !scoreAchieved.isFinishingThrow())) {
                     switch (dart){
                         case FIRST -> {
                             turn.addThrow(new Throw(0, scoreAchieved.isFinishingThrow(), scoreAchieved.isFinishingShot(), false));
@@ -43,7 +43,7 @@ public class SingleGame {
                     turn.markAsBusted();
                     break;
                 } else if (scoreCurrPlayer - scoreAchieved.score() == 0 && scoreAchieved.isFinishingThrow()) {
-                    System.out.println(String.format("%s WON", player.name()));
+                    System.out.printf("%s WON%n", player.name());
                     finished = true;
                     break;
                 }

@@ -5,21 +5,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class SingleGameTest {
+public class legSimulatorTest {
 
     @Autowired
-    private SingleGame singleGame;
+    private legSimulator legSimulator;
 
     @Test
     void singleGameTest() {
-        singleGame.playGame(new Player("Humphries",25,50,95,42,44));
-        singleGame.calculateStatistics();
+        legSimulator.playGame(new Player("Humphries",25,50,95,42,44));
+        legSimulator.calculateStatistics();
     }
 
     @Test
     void testBatch() {
         while (true) {
-            singleGame.playGame(new Player("Humphries",25,50,95,42,44));
+            legSimulator.playGame(new Player("Humphries",25,50,95,42,44));
         }
     }
 
