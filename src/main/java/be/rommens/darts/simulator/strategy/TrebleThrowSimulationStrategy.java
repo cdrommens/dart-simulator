@@ -8,6 +8,15 @@ import org.springframework.stereotype.Component;
 @Component(AimType.TREBLE)
 public class TrebleThrowSimulationStrategy implements ThrowSimulationStrategy {
 
+    /**
+     *  Aim for treble where X is the accuracy:
+     *  - 0 -> X : hit treble
+     *  - Rest : treble missed:
+     *     - 80% lands in the single of the same number
+     *     - 15% lands in a neighboring treble
+     *     - 5% is a loose dart
+     */
+
     @Override
     public Throw simulateThrow(int scoreToAim, Player player, boolean isFinishingShot) {
         // return result of throwing for treble d with accuracy p% ; iV stands for "is this valid as a finishing throw?".
@@ -19,17 +28,19 @@ public class TrebleThrowSimulationStrategy implements ThrowSimulationStrategy {
         if (r < accuracyPercentage) {
             return new Throw(3 * scoreToAim, false, false, false);
         }
-        else if (r < accuracyPercentage + (100 - accuracyPercentage)*0.2) {
-            //return single value (and other 'miss' options) with a fifth of the probability not to hit as intended etc.
+        else if (r < accuracyPercentage + (100 - accuracyPercentage)*0.8) {
+            // if treble is missed, in 80% of the time, a single is hit
             return new Throw(scoreToAim, false, false, false);
         }
-        else if (r < accuracyPercentage + 2 * (100 - accuracyPercentage)*0.2) {
+        else if (r < accuracyPercentage + (100 - accuracyPercentage)*0.875) {
+            // if treble is missed, 7,5% of the time, a neighboring treble is hit
             return new Throw(3 * DART_BOARD[0][scoreToAim], false, false, false);
         }
-        else if (r < accuracyPercentage + 3 * (100 - accuracyPercentage)*0.2) {
+        else if (r < accuracyPercentage + (100 - accuracyPercentage)*0.95) {
             return new Throw(3 * DART_BOARD[1][scoreToAim], false, false, false);
         }
-        else if (r < accuracyPercentage + 4 * (100 - accuracyPercentage)*0.2) {
+        else if (r < accuracyPercentage + (100 - accuracyPercentage)*0.975) {
+            // rarely a loose dart
             return new Throw(DART_BOARD[0][scoreToAim], false, false, false);
         }
         else {
