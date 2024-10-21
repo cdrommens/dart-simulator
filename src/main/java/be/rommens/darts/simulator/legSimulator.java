@@ -1,5 +1,9 @@
 package be.rommens.darts.simulator;
 
+import be.rommens.darts.simulator.model.Dart;
+import be.rommens.darts.simulator.model.Player;
+import be.rommens.darts.simulator.model.Throw;
+import be.rommens.darts.simulator.model.Turn;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;

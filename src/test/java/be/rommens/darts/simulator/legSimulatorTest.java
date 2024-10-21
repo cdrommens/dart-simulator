@@ -1,5 +1,9 @@
 package be.rommens.darts.simulator;
 
+import be.rommens.darts.simulator.model.Player;
+import be.rommens.darts.simulator.model.Statistics;
+import be.rommens.darts.simulator.model.Throw;
+import be.rommens.darts.simulator.model.Turn;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package be.rommens.darts.simulator;
+package be.rommens.darts.simulator.model;
 
 import java.util.ArrayList;
 import java.util.List;

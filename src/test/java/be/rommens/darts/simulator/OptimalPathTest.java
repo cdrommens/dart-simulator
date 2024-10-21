@@ -1,12 +1,10 @@
 package be.rommens.darts.simulator;
 
-import static be.rommens.darts.simulator.Dart.FIRST;
-import static be.rommens.darts.simulator.Dart.SECOND;
-import static be.rommens.darts.simulator.Dart.THIRD;
+import static be.rommens.darts.simulator.model.Dart.FIRST;
+import static be.rommens.darts.simulator.model.Dart.SECOND;
+import static be.rommens.darts.simulator.model.Dart.THIRD;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

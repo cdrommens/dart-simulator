@@ -1,5 +1,8 @@
 package be.rommens.darts.simulator;
 
+import be.rommens.darts.simulator.model.Dart;
+import be.rommens.darts.simulator.model.Player;
+import be.rommens.darts.simulator.model.Throw;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -11,17 +14,17 @@ public class Source {
     };
 
     private final Score[] scores = {new Score(), new Score()};
-    private final Board board;
     private final ThrowDecision decide;
+    private final ThrowSimulator simulator;
 
     private static final int totalSets = 13;		   //total sets played in each match
 
     private boolean playerZeroTurn = true;         //Sid is player zero and starts
     private int currentPlayer = -1;          //this later holds whether Sid (0) is the current player or Joe (1)
 
-    public Source(Board board, ThrowDecision decide) {
-        this.board = board;
+    public Source(ThrowDecision decide, ThrowSimulator simulator) {
         this.decide = decide;
+        this.simulator = simulator;
     }
 
     private void play() {

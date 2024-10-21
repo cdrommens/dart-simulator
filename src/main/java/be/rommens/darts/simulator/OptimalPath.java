@@ -3,6 +3,7 @@ package be.rommens.darts.simulator;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 
+import be.rommens.darts.simulator.model.Dart;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
