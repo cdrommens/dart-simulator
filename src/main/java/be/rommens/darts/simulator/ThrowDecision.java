@@ -13,21 +13,6 @@ public class ThrowDecision {
         this.board = board;
     }
 
-    //TODO : improve optimal path with input from https://dartscheckoutassistant.com/2021/01/26/a-guide-to-reaching-a-checkout/
-    //calculate optimal path for dart 1, 2, 3 starting from 501 -> 2
-    //TODO : improve with number of darts left (64 with 2 darts is different than 64 with 3 darts)
-    //TODO : rework to map (map THREE_DARTS_LEFT, map TWO_DARTS_LEFT)
-    //fn returns target SCORE to aim for, given a current score of s;
-    // used the Out Chart for 01 Dart Games (bargames101.com/wp-content/uploads/2016/10/The-01-Out-Chart_750x970.png);
-    // fn is called by actualTargetHit()
-    private int throwDecision(Dart dart, int s) {
-        return switch (dart) {
-            case FIRST -> optimalPath.getFirstAim(s);
-            case SECOND -> optimalPath.getSecondAim(s);
-            case THIRD -> optimalPath.getThirdAim(s);
-        };
-    }
-
     //fn returns score of target actually hit
     public Throw simulateThrow(Dart dart, int currentScore, Player player) {
         //takes score of current player, board object, current player object,
@@ -43,7 +28,7 @@ public class ThrowDecision {
         } else {
             //ask throwDecision() what to aim for
             //int to aim at is suggested via throwDecision()-function, which takes real advice into account
-            int aim = throwDecision(dart, currentScore);
+            int aim = optimalPath.decideAim(dart, currentScore);
             if (aim == 60 || aim == 57 || aim == 54 || aim == 51 || aim == 48 || aim == 45 || aim == 42 || aim == 39 || aim == 33 || aim == 30) {
                 //throw treble aiming at aim/3 with hitting prob. of the respective player
                 return board.throwTreble(aim / 3, player.accuracyTreble());

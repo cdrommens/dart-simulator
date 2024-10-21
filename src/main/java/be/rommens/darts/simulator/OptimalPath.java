@@ -1,6 +1,5 @@
 package be.rommens.darts.simulator;
 
-import static java.util.Objects.nonNull;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 
@@ -9,12 +8,8 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -44,16 +39,12 @@ public class OptimalPath {
                         });
     }
 
-    public int getFirstAim(int startScore) {
-        return optimalPath.get(startScore).getFirstDart();
-    }
-
-    public int getSecondAim(int startScore) {
-        return optimalPath.get(startScore).getSecondDart();
-    }
-
-    public int getThirdAim(int startScore) {
-        return optimalPath.get(startScore).getThirdDart();
+    public int decideAim(Dart dart, int s) {
+        return switch (dart) {
+            case FIRST -> optimalPath.get(s).getFirstDart();
+            case SECOND -> optimalPath.get(s).getSecondDart();
+            case THIRD -> optimalPath.get(s).getThirdDart();
+        };
     }
 
     private int decideAimSecondDart(int startScore) {

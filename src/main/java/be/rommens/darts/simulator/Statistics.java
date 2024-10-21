@@ -9,6 +9,7 @@ public class Statistics {
     private int first9Average;
     private double checkoutPercentage;
     private int number180s;
+    private int number140s;
 
     private Statistics() {
         //private constructor
@@ -22,6 +23,7 @@ public class Statistics {
         statistics.first9Average = calculateFirst9Average(turns);
         statistics.checkoutPercentage = calculateCheckoutPercentage(turns);
         statistics.number180s = calculateNumberOf180s(turns);
+        statistics.number140s = calculateNumberOf140s(turns);
         return statistics;
     }
 
@@ -31,6 +33,7 @@ public class Statistics {
         System.out.println("First 9 Average : " + first9Average);
         System.out.println("Checkout% : " + checkoutPercentage);
         System.out.println("180's : " + number180s);
+        System.out.println("140's : " + number140s);
     }
 
     private static int calculateNumberOfDartsThrown(List<Turn> turns) {
@@ -59,6 +62,12 @@ public class Statistics {
     private static int calculateNumberOf180s(List<Turn> turns) {
         return (int)turns.stream()
                 .filter(Turn::is180)
+                .count();
+    }
+
+    private static int calculateNumberOf140s(List<Turn> turns) {
+        return (int)turns.stream()
+                .filter(Turn::is140)
                 .count();
     }
 }

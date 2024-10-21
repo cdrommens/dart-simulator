@@ -36,6 +36,12 @@ public class Turn {
         return scores.stream().allMatch(t -> t.score() == 60);
     }
 
+    public boolean is140() {
+        return scores.stream()
+                .map(Throw::score)
+                .reduce(0, Integer::sum) == 140;
+    }
+
     public Integer getStartScore() {
         return startScore;
     }
