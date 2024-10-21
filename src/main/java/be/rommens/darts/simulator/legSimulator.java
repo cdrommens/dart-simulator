@@ -16,10 +16,10 @@ public class legSimulator {
 
     private static final Logger log = LoggerFactory.getLogger(legSimulator.class);
 
-    private final ThrowDecision decide;
+    private final ThrowSimulator simulator;
 
-    public legSimulator(ThrowDecision decide) {
-        this.decide = decide;
+    public legSimulator(ThrowSimulator simulator) {
+        this.simulator = simulator;
     }
 
     public List<Turn> playGame(Player player) {
@@ -32,7 +32,7 @@ public class legSimulator {
             for (Dart dart : Dart.values()) {
                 int scoreCurrPlayer = turn.getScoreLeft();
 
-                Throw simulatedThrow = decide.simulateThrow(dart, scoreCurrPlayer, player);  //returns score hit
+                Throw simulatedThrow = simulator.throwDart(dart, scoreCurrPlayer, player);  //returns score hit
                 turn.addThrow(simulatedThrow);
 
                 log.debug(turn.toString());

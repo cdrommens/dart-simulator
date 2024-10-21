@@ -1,8 +1,9 @@
-package be.rommens.darts.simulator;
+package be.rommens.darts.simulator.guide;
 
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 
+import be.rommens.darts.simulator.ThrowSimulator;
 import be.rommens.darts.simulator.model.Dart;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -22,7 +23,7 @@ public class OptimalPath {
     private final Map<Integer, Entry> optimalPath;
 
     public OptimalPath() throws URISyntaxException, IOException {
-        optimalPath = Files.readAllLines(Path.of(ThrowDecision.class.getClassLoader().getResource("optimal_path.csv").toURI()))
+        optimalPath = Files.readAllLines(Path.of(ThrowSimulator.class.getClassLoader().getResource("optimal_path.csv").toURI()))
                 .stream()
                 .skip(1)
                 .map(line -> line.split(";", -1))

@@ -5,6 +5,7 @@ import static be.rommens.darts.simulator.model.Dart.SECOND;
 import static be.rommens.darts.simulator.model.Dart.THIRD;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import be.rommens.darts.simulator.guide.OptimalPath;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

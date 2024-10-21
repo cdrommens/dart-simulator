@@ -14,7 +14,7 @@ public class AndereTests {
     @Test
     void nummertest() throws URISyntaxException, IOException {
         //Integer result = Integer.parseInt("501");
-        var erui = Path.of(ThrowDecision.class.getClassLoader().getResource("optimal_path.csv").toURI());
+        var erui = Path.of(ThrowSimulator.class.getClassLoader().getResource("optimal_path.csv").toURI());
         var lijst = Files.readAllLines(erui, StandardCharsets.UTF_8);
         var item = lijst.get(1);
         var split = item.split(";");

@@ -14,7 +14,6 @@ public class Source {
     };
 
     private final Score[] scores = {new Score(), new Score()};
-    private final ThrowDecision decide;
     private final ThrowSimulator simulator;
 
     private static final int totalSets = 13;		   //total sets played in each match
@@ -22,8 +21,7 @@ public class Source {
     private boolean playerZeroTurn = true;         //Sid is player zero and starts
     private int currentPlayer = -1;          //this later holds whether Sid (0) is the current player or Joe (1)
 
-    public Source(ThrowDecision decide, ThrowSimulator simulator) {
-        this.decide = decide;
+    public Source(ThrowSimulator simulator) {
         this.simulator = simulator;
     }
 
@@ -113,7 +111,7 @@ public class Source {
             for (Dart dart : Dart.values()) {
                 int scoreCurrPlayer = scores[currentPlayer].getCurrentGameScore();  //score of current player
 
-                scoreAchieved = decide.simulateThrow(dart, scoreCurrPlayer, currentTurnPlayer);  //returns score hit
+                scoreAchieved = simulator.throwDart(dart, scoreCurrPlayer, currentTurnPlayer);  //returns score hit
 
                 System.out.println(String.format("%s : %s - %s", currentPlayer, scoreCurrPlayer, scoreAchieved.score()));
 
