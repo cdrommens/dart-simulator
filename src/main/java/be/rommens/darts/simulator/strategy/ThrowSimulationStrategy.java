@@ -3,9 +3,6 @@ package be.rommens.darts.simulator.strategy;
 import be.rommens.darts.simulator.model.Player;
 import be.rommens.darts.simulator.model.Throw;
 
-//TODO : upgrade to 21 and refactor with switch expressions : case int rand when r < accuracyPercentage -> new SingleScore(...);
-//TODO : introduce levels : lower the aimed hit rate with a certain % AND play with the rest of probability (0.2 etc)
-//TODO : introduce hit % for doubles on 3, 2 and 1 dart checkout
 public interface ThrowSimulationStrategy {
 
     int[][] DART_BOARD = {

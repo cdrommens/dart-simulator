@@ -13,6 +13,10 @@ import be.rommens.darts.simulator.strategy.ThrowSimulationStrategy;
 import java.util.Map;
 import org.springframework.stereotype.Component;
 
+//TODO : introduce levels : lower the aimed hit rate with a certain % AND play with the rest of probability (0.2 etc)
+//TODO : introduce hit % for doubles on 3, 2 and 1 dart checkout
+//TODO : fix to many loose darts
+
 @Component
 public class ThrowSimulator {
 
@@ -55,7 +59,7 @@ public class ThrowSimulator {
     }
 
     private Throw throwDart(String aimType, int scoreToAim, Player player, boolean isFinishingShot) {
-        if (throwSimulationStrategies.containsKey(aimType.toString())) {
+        if (throwSimulationStrategies.containsKey(aimType)) {
             return throwSimulationStrategies.get(aimType).simulateThrow(scoreToAim, player, isFinishingShot);
         }
         throw new IllegalArgumentException("Unknown aim type: " + aimType);
