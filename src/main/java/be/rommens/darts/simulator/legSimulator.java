@@ -33,15 +33,14 @@ public class legSimulator {
                 int scoreCurrPlayer = turn.getScoreLeft();
 
                 Throw simulatedThrow = simulator.throwDart(dart, scoreCurrPlayer, player);  //returns score hit
-                turn.addThrow(simulatedThrow);
+                turn.addThrow(dart, simulatedThrow);
 
                 log.debug(turn.toString());
                 log.debug("{} | {} : {} - {} {}", dart.ordinal()+1, player.name(), scoreCurrPlayer, simulatedThrow.score(), simulatedThrow.isFinishingShot());
 
                 int remainingScore = scoreCurrPlayer - simulatedThrow.score();
                 if ((remainingScore == 1 || remainingScore < 0) || (remainingScore == 0 && !simulatedThrow.isFinishingThrow())) {
-                    fillBustedThrows(dart, turn, simulatedThrow);
-                    turn.markAsBusted();
+                    turn.markAsBusted(dart);
                     break;
                 }
                 if (remainingScore == 0) {
@@ -60,15 +59,5 @@ public class legSimulator {
                 .filter(score -> score >= 0)
                 .min(Comparator.naturalOrder())
                 .orElse(501);
-    }
-
-    private void fillBustedThrows(Dart dart, Turn turn, Throw simulatedThrow) {
-        switch (dart){
-            case FIRST -> {
-                turn.addThrow(new Throw(0, simulatedThrow.isFinishingThrow(), simulatedThrow.isFinishingShot(), false));
-                turn.addThrow(new Throw(0, simulatedThrow.isFinishingThrow(), simulatedThrow.isFinishingShot(), false));
-            }
-            case SECOND -> turn.addThrow(new Throw(0, simulatedThrow.isFinishingThrow(), simulatedThrow.isFinishingShot(), false));
-        }
     }
 }

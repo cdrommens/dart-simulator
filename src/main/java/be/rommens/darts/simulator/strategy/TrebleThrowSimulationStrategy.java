@@ -22,8 +22,9 @@ public class TrebleThrowSimulationStrategy implements ThrowSimulationStrategy {
     public Throw simulateThrow(Dart dart, int scoreToAim, Player player, boolean isFinishingShot) {
         // return result of throwing for treble d with accuracy p% ; iV stands for "is this valid as a finishing throw?".
         // This is unchanged and hence would not have been needed
-        int r = ThreadLocalRandom.current().nextInt(100);
+        int r = generateRandom();
         int accuracyPercentage = player.accuracyTreble();
+        //TODO : based on the average, the accuracy increases based on the result of the previous darts if in the same field
         //System.out.printf("(%s - %s) ", r, accuracyPercentage);
 
         if (r < accuracyPercentage) {
