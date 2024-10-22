@@ -1,27 +1,28 @@
 package be.rommens.darts.simulator;
 
+import be.rommens.darts.simulator.model.Dart;
+import be.rommens.darts.simulator.model.Player;
+import be.rommens.darts.simulator.model.Throw;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Source {
 
     private final Player[] players = {
-            new Player("Humphries",25,50,95,42,44),
-            new Player("Joe",41,50,95,38,42)
+            new Player("Humphries",25,50,95,42,44, 43),
+            new Player("Joe",41,50,95,38,42, 39)
     };
 
     private final Score[] scores = {new Score(), new Score()};
-    private final Board board;
-    private final ThrowDecision decide;
+    private final ThrowSimulator simulator;
 
     private static final int totalSets = 13;		   //total sets played in each match
 
     private boolean playerZeroTurn = true;         //Sid is player zero and starts
     private int currentPlayer = -1;          //this later holds whether Sid (0) is the current player or Joe (1)
 
-    public Source(Board board, ThrowDecision decide) {
-        this.board = board;
-        this.decide = decide;
+    public Source(ThrowSimulator simulator) {
+        this.simulator = simulator;
     }
 
     private void play() {
@@ -103,14 +104,14 @@ public class Source {
 
             //get current player's current score
             Player currentTurnPlayer = players[currentPlayer];
-            SingleScore scoreAchieved;
+            Throw scoreAchieved;
             scoreBeforeThreeThrows = scores[currentPlayer].getCurrentGameScore(); //store score before throws to make sure it can be reset
 
             //simulates three throws; exits earlier if won or invalid throw
-            for (int dartThrows = 0; dartThrows < 3; dartThrows++) {
+            for (Dart dart : Dart.values()) {
                 int scoreCurrPlayer = scores[currentPlayer].getCurrentGameScore();  //score of current player
 
-                scoreAchieved = decide.actualTargetHit(scoreCurrPlayer, board, currentTurnPlayer, decide);  //returns score hit
+                scoreAchieved = simulator.throwDart(dart, scoreCurrPlayer, currentTurnPlayer);  //returns score hit
 
                 System.out.println(String.format("%s : %s - %s", currentPlayer, scoreCurrPlayer, scoreAchieved.score()));
 
@@ -118,7 +119,7 @@ public class Source {
                 if (scoreCurrPlayer - scoreAchieved.score() >= 2) {
                     scores[currentPlayer].setCurrentGameScore(scoreCurrPlayer - scoreAchieved.score());
                     //change over player only if third throw done
-                    if(dartThrows == 2) {
+                    if(dart == Dart.SECOND) {
                         playerZeroThrows = !playerZeroThrows;
                     }
                 }
