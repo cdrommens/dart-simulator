@@ -15,7 +15,7 @@ public class BullThrowSimulationStrategy implements ThrowSimulationStrategy {
 
         //C++ : rand() % 100 => 0 - 99
         //C++ : rand() % 100 + 1  => 1 - 100
-        int r = ThreadLocalRandom.current().nextInt(100);  //should be 1000
+        int r = generateRandom();
         int accuracyPercentage = player.accuracyBull();
         System.out.printf("(%s - %s) ", r, accuracyPercentage);
         // formerly: hit bull with p=accurancy-20% // I changed this because it made no sense to me that, if the accuracy is p%,

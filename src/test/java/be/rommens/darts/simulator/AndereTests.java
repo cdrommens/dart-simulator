@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.concurrent.ThreadLocalRandom;
 import org.junit.jupiter.api.Test;
 
 public class AndereTests {
@@ -20,6 +21,13 @@ public class AndereTests {
         var split = item.split(";");
         Integer num = Integer.valueOf(split[0]);
         System.out.println("lijst = " + split[0]);
+    }
+
+    @Test
+    void guassianTest() {
+        System.out.println("novice : " + ThreadLocalRandom.current().nextGaussian(0.0, 100));
+        System.out.println("interm : " + ThreadLocalRandom.current().nextGaussian(0.0, 30));
+        System.out.println("pro : " + ThreadLocalRandom.current().nextGaussian(0.0, 5));
     }
 
 }

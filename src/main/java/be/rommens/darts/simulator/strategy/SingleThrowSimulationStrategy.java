@@ -12,7 +12,7 @@ public class SingleThrowSimulationStrategy implements ThrowSimulationStrategy {
     @Override
     public Throw simulateThrow(Dart dart, int scoreToAim, Player player, boolean isFinishingShot) {
         //  return result of throwing for single d with accuracy p% (or q% for the outer)
-        int r = ThreadLocalRandom.current().nextInt(100);
+        int r = generateRandom();
         int accuracyPercentage = player.accuracySingle();
         int accuracyOuterPercentage = player.accuracyOuter();
 

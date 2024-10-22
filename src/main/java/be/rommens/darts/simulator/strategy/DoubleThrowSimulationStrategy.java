@@ -24,7 +24,7 @@ public class DoubleThrowSimulationStrategy implements ThrowSimulationStrategy {
     @Override
     public Throw simulateThrow(Dart dart, int scoreToAim, Player player, boolean isFinishingShot) {
         //  return result of throwing for double d with accuracy p%
-        int r = ThreadLocalRandom.current().nextInt(100);
+        int r = generateRandom();
         int accuracyPercentage = switch(dart) {
             case FIRST, SECOND -> player.accuracyDouble();
             case THIRD -> player.accuracyDouble3rdDart();

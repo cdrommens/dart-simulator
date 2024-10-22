@@ -20,7 +20,7 @@ public class legSimulatorTest {
     void singleGameTest() {
         var leg = legSimulator.playGame(new Player("Humphries",25,50,95,42,44, 43));
         for(Turn turn : leg) {
-            System.out.println(turn.getStartScore() + " : " + turn.getThrows().map(Throw::score).reduce(0, Integer::sum) + " (" + turn + ")");
+            System.out.println(turn.getStartScore() + " : " + turn.getScoreThrown() + " (" + turn + ")");
         }
         Statistics.calculate(leg).write();
     }

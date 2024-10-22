@@ -10,6 +10,7 @@ public class Statistics {
     private double checkoutPercentage;
     private int number180s;
     private int number140s;
+    private int numberTonPlus;
 
     private Statistics() {
         //private constructor
@@ -24,6 +25,7 @@ public class Statistics {
         statistics.checkoutPercentage = calculateCheckoutPercentage(turns);
         statistics.number180s = calculateNumberOf180s(turns);
         statistics.number140s = calculateNumberOf140s(turns);
+        statistics.numberTonPlus = calculateNumberOfTonPlus(turns);
         return statistics;
     }
 
@@ -34,21 +36,21 @@ public class Statistics {
         System.out.println("Checkout% : " + checkoutPercentage);
         System.out.println("180's : " + number180s);
         System.out.println("140's : " + number140s);
+        System.out.println("100+ : " + numberTonPlus);
     }
 
     private static int calculateNumberOfDartsThrown(List<Turn> turns) {
-        return turns.stream().flatMap(Turn::getThrows).toList().size();
+        return turns.stream().map(Turn::getNumberOfDartsThrown).reduce(0, Integer::sum);
     }
 
     private static double calculateAverage(List<Turn> turns) {
-        return 501.00 / turns.stream().flatMap(Turn::getThrows).toList().size() * 3;
+        return 501.00 / turns.stream().map(Turn::getNumberOfDartsThrown).reduce(0, Integer::sum) * 3;
     }
 
     private static int calculateFirst9Average(List<Turn> turns) {
         return turns.stream()
-                .flatMap(Turn::getThrows)
-                .limit(9)
-                .map(Throw::score)
+                .limit(3)
+                .map(Turn::getScoreThrown)
                 .reduce(0, Integer::sum)/ 9 * 3;
     }
 
@@ -68,6 +70,12 @@ public class Statistics {
     private static int calculateNumberOf140s(List<Turn> turns) {
         return (int)turns.stream()
                 .filter(Turn::is140)
+                .count();
+    }
+
+    private static int calculateNumberOfTonPlus(List<Turn> turns) {
+        return (int)turns.stream()
+                .filter(Turn::isTonPlus)
                 .count();
     }
 }
