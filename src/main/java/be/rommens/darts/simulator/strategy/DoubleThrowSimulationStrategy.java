@@ -1,5 +1,6 @@
 package be.rommens.darts.simulator.strategy;
 
+import be.rommens.darts.simulator.model.Dart;
 import be.rommens.darts.simulator.model.Player;
 import be.rommens.darts.simulator.model.Throw;
 import java.util.concurrent.ThreadLocalRandom;
@@ -18,11 +19,16 @@ public class DoubleThrowSimulationStrategy implements ThrowSimulationStrategy {
      *   - 4% is neighbouring single
      */
 
+    //TODO : baseline is checkout%, en de cijfers voor checkout% 1,2,3 darter gebruiken om de random te beperken om meer kans over te laten
+    //TODO : meer kans overlaten, genereer X aantal randoms; laat de hoogste vallen? Neem gemiddelde van y resultaten naargelang %?
     @Override
-    public Throw simulateThrow(int scoreToAim, Player player, boolean isFinishingShot) {
+    public Throw simulateThrow(Dart dart, int scoreToAim, Player player, boolean isFinishingShot) {
         //  return result of throwing for double d with accuracy p%
         int r = ThreadLocalRandom.current().nextInt(100);
-        int accuracyPercentage = player.accuracyDouble();
+        int accuracyPercentage = switch(dart) {
+            case FIRST, SECOND -> player.accuracyDouble();
+            case THIRD -> player.accuracyDouble3rdDart();
+        };
 
         if (r < accuracyPercentage) {
             return new Throw(2 * scoreToAim, true, isFinishingShot, false);

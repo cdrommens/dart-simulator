@@ -1,5 +1,6 @@
 package be.rommens.darts.simulator.strategy;
 
+import be.rommens.darts.simulator.model.Dart;
 import be.rommens.darts.simulator.model.Player;
 import be.rommens.darts.simulator.model.Throw;
 import java.util.concurrent.ThreadLocalRandom;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class SingleThrowSimulationStrategy implements ThrowSimulationStrategy {
 
     @Override
-    public Throw simulateThrow(int scoreToAim, Player player, boolean isFinishingShot) {
+    public Throw simulateThrow(Dart dart, int scoreToAim, Player player, boolean isFinishingShot) {
         //  return result of throwing for single d with accuracy p% (or q% for the outer)
         int r = ThreadLocalRandom.current().nextInt(100);
         int accuracyPercentage = player.accuracySingle();

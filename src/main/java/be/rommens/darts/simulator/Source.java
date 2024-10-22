@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 public class Source {
 
     private final Player[] players = {
-            new Player("Humphries",25,50,95,42,44),
-            new Player("Joe",41,50,95,38,42)
+            new Player("Humphries",25,50,95,42,44, 43),
+            new Player("Joe",41,50,95,38,42, 39)
     };
 
     private final Score[] scores = {new Score(), new Score()};

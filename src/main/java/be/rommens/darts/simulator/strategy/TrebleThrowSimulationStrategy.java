@@ -1,5 +1,6 @@
 package be.rommens.darts.simulator.strategy;
 
+import be.rommens.darts.simulator.model.Dart;
 import be.rommens.darts.simulator.model.Player;
 import be.rommens.darts.simulator.model.Throw;
 import java.util.concurrent.ThreadLocalRandom;
@@ -18,7 +19,7 @@ public class TrebleThrowSimulationStrategy implements ThrowSimulationStrategy {
      */
 
     @Override
-    public Throw simulateThrow(int scoreToAim, Player player, boolean isFinishingShot) {
+    public Throw simulateThrow(Dart dart, int scoreToAim, Player player, boolean isFinishingShot) {
         // return result of throwing for treble d with accuracy p% ; iV stands for "is this valid as a finishing throw?".
         // This is unchanged and hence would not have been needed
         int r = ThreadLocalRandom.current().nextInt(100);

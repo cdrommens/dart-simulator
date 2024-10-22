@@ -1,5 +1,6 @@
 package be.rommens.darts.simulator.strategy;
 
+import be.rommens.darts.simulator.model.Dart;
 import be.rommens.darts.simulator.model.Player;
 import be.rommens.darts.simulator.model.Throw;
 import java.util.concurrent.ThreadLocalRandom;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class BullThrowSimulationStrategy implements ThrowSimulationStrategy {
 
     @Override
-    public Throw simulateThrow(int scoreToAim, Player player, boolean isFinishingShot) {
+    public Throw simulateThrow(Dart dart, int scoreToAim, Player player, boolean isFinishingShot) {
         //Throw for the bull with accuracy p%; iV stands for "is this valid as a finishing throw?"
 
         //C++ : rand() % 100 => 0 - 99

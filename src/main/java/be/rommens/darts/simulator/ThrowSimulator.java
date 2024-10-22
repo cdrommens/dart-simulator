@@ -36,31 +36,31 @@ public class ThrowSimulator {
         //if it remains an even number between 2 and 40
         if ((currentScore <= 40 && currentScore >= 2) && (currentScore % 2 == 0)) {
             //throw double aiming at s/2 with hitting prob. of the respective player and return whatever was hit
-            return throwDart(DOUBLE, currentScore / 2, player, true);
+            return throwDart(dart, DOUBLE, currentScore / 2, player, true);
         } else if (currentScore == 50) {
             //throw bull
-            return throwDart(BULL, 50, player, true);
+            return throwDart(dart, BULL, 50, player, true);
         } else {
             //ask throwDecision() what to aim for
             //int to aim at is suggested via throwDecision()-function, which takes real advice into account
             int aim = optimalPath.decideAim(dart, currentScore);
             if (aim == 60 || aim == 57 || aim == 54 || aim == 51 || aim == 48 || aim == 45 || aim == 42 || aim == 39 || aim == 33 || aim == 30) {
                 //throw treble aiming at aim/3 with hitting prob. of the respective player
-                return throwDart(TREBLE, aim / 3, player, false);
+                return throwDart(dart, TREBLE, aim / 3, player, false);
             } else {
                 //throw single aiming at aim with hitting prob. of the respective player, which is different if aim is 25 than otherwise
                 if (aim > 20 && aim % 2 == 0) { //see last dart in optimal path (double should now be single)
-                    return throwDart(SINGLE, aim / 2, player, false);
+                    return throwDart(dart, SINGLE, aim / 2, player, false);
                 } else {
-                    return throwDart(SINGLE, aim, player, false);
+                    return throwDart(dart, SINGLE, aim, player, false);
                 }
             }
         }
     }
 
-    private Throw throwDart(String aimType, int scoreToAim, Player player, boolean isFinishingShot) {
+    private Throw throwDart(Dart dart, String aimType, int scoreToAim, Player player, boolean isFinishingShot) {
         if (throwSimulationStrategies.containsKey(aimType)) {
-            return throwSimulationStrategies.get(aimType).simulateThrow(scoreToAim, player, isFinishingShot);
+            return throwSimulationStrategies.get(aimType).simulateThrow(dart, scoreToAim, player, isFinishingShot);
         }
         throw new IllegalArgumentException("Unknown aim type: " + aimType);
     }
