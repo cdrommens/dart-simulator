@@ -1,11 +1,14 @@
-package be.rommens.darts.simulator.strategy;
+package be.rommens.darts.simulator.strategy.orginal;
 
 import be.rommens.darts.simulator.model.Dart;
 import be.rommens.darts.simulator.model.Player;
 import be.rommens.darts.simulator.model.Throw;
-import java.util.concurrent.ThreadLocalRandom;
+import be.rommens.darts.simulator.strategy.AimType;
+import be.rommens.darts.simulator.strategy.ThrowSimulationStrategy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+@Profile("original")
 @Component(AimType.DOUBLE)
 public class DoubleThrowSimulationStrategy implements ThrowSimulationStrategy {
 
