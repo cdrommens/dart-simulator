@@ -6,7 +6,8 @@ public record Player (
         int accuracyOuter,
         int accuracySingle,
         int accuracyDouble,
-        int accuracyTreble,
-        int accuracyDouble3rdDart) {
+        double accuracyTreble,
+        int accuracyDouble3rdDart,
+        double first9avg) {
 
 }

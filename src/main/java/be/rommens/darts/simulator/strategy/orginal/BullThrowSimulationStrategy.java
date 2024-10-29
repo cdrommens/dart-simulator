@@ -3,6 +3,7 @@ package be.rommens.darts.simulator.strategy.orginal;
 import be.rommens.darts.simulator.model.Dart;
 import be.rommens.darts.simulator.model.Player;
 import be.rommens.darts.simulator.model.Throw;
+import be.rommens.darts.simulator.model.Turn;
 import be.rommens.darts.simulator.strategy.AimType;
 import be.rommens.darts.simulator.strategy.ThrowSimulationStrategy;
 import java.util.concurrent.ThreadLocalRandom;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class BullThrowSimulationStrategy implements ThrowSimulationStrategy {
 
     @Override
-    public Throw simulateThrow(Dart dart, int scoreToAim, Player player, boolean isFinishingShot) {
+    public Throw simulateThrow(Turn turn, Dart dart, int scoreToAim, Player player, boolean isFinishingShot) {
         //Throw for the bull with accuracy p%; iV stands for "is this valid as a finishing throw?"
 
         //C++ : rand() % 100 => 0 - 99
@@ -26,15 +27,15 @@ public class BullThrowSimulationStrategy implements ThrowSimulationStrategy {
         // the probability of hitting accurately should be p%-20%
         if (r < accuracyPercentage) {
             //isFinishingThrow stands for "is this valid as a finishing throw?" (yes, it is)
-            return new Throw(50, true, isFinishingShot, false);
+            return new Throw(null, 50, true, isFinishingShot, false, false);
         }
         else if (r < accuracyPercentage + (100 - accuracyPercentage)*0.6) {
             // hit 25 with accuracy a 60% given that not to hit as intended
-            return new Throw(25, false, isFinishingShot, false);
+            return new Throw(null, 25, false, isFinishingShot, false, false);
         }
         else {
             //remaining 40% (given that not to hit as intended) return any other single number with the same probability
-            return new Throw(1 + ThreadLocalRandom.current().nextInt(20), false, isFinishingShot, false);
+            return new Throw(null, 1 + ThreadLocalRandom.current().nextInt(20), false, isFinishingShot, false, false);
         }
     }
 }

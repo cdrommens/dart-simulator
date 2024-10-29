@@ -3,8 +3,8 @@ package be.rommens.darts.simulator.strategy.polar;
 import be.rommens.darts.simulator.model.Dart;
 import be.rommens.darts.simulator.model.Player;
 import be.rommens.darts.simulator.model.Throw;
+import be.rommens.darts.simulator.model.Turn;
 import be.rommens.darts.simulator.strategy.AimType;
-import be.rommens.darts.simulator.strategy.ThrowSimulationStrategy;
 import java.util.Map;
 import org.apache.commons.geometry.euclidean.twod.PolarCoordinates;
 import org.apache.commons.geometry.euclidean.twod.Vector2D;
@@ -13,7 +13,9 @@ import org.springframework.stereotype.Component;
 
 @Profile("polar")
 @Component(AimType.TREBLE)
-public class TrebleThrowSimulationStrategy implements ThrowSimulationStrategy {
+public class TrebleThrowSimulationStrategy extends PolarThrowSimulationStrategy {
+
+    private static final int TREBLE_RADIUS = 16+4;
 
     private static final Map<Integer, Vector2D> COORDINATES = Map.ofEntries(
 
@@ -40,30 +42,45 @@ public class TrebleThrowSimulationStrategy implements ThrowSimulationStrategy {
     );
 
     @Override
-    public Throw simulateThrow(Dart dart, int scoreToAim, Player player, boolean isFinishingShot) {
+    public Throw simulateThrow(Turn turn, Dart dart, int scoreToAim, Player player, boolean isFinishingShot) {
 
-        Vector2D r = generateRandomVector(COORDINATES.get(scoreToAim));
-
-        PolarCoordinates result = PolarCoordinates.fromCartesian(r);
+        PolarCoordinates result;
+        do {
+            boolean isPreviousTreble = turn.getPreviousThrow(dart).map(Throw::isHitAsIntended).orElse(false);
+            Vector2D r = isPreviousTreble ? generateRandomVector(5, COORDINATES.get(scoreToAim)) : generateRandomVector(COORDINATES.get(scoreToAim));
+            result = PolarCoordinates.fromCartesian(r);
+        } while (!isInRadius(COORDINATES.get(scoreToAim), result, player));
 
         if (result.getRadius() <= 6.35) {
-            return new Throw(50, true, false, false);
+            return new Throw(result, 50, true, false, false, false);
         }
         if (result.getRadius() > 6.35 && result.getRadius() <= 15.9) {
-            return new Throw(25, false, false, false);
+            return new Throw(result, 25, false, false, false, false);
         }
 
         int number = getFieldFromPolarCoordinates(result);
 
         if (result.getRadius() > 99 && result.getRadius() <= 107) {
-            return new Throw(3 * number, false, false, false);
+            return new Throw(result, 3 * number, false, false, false, true);
         }
         if (result.getRadius() > 162 && result.getRadius() <= 170) {
-            return new Throw(2 * number, true, false, false);
+            return new Throw(result,2 * number, true, false, false, false);
         }
         if (result.getRadius() > 170) {
-            return new Throw(0, false, false, false);
+            return new Throw(result, 0, false, false, false, false);
         }
-        return new Throw(number, false, false, false);
+        return new Throw(result, number, false, false, false, false);
+    }
+
+    private boolean isInRadius(Vector2D aim, PolarCoordinates dart, Player player) {
+        PolarCoordinates center = PolarCoordinates.fromCartesian(aim);
+        var center2d = center.toCartesian();
+        var dart2d = dart.toCartesian();
+        var distance = Math.pow((dart2d.getX() - center2d.getX()),2) + Math.pow((dart2d.getY() - center2d.getY()),2);
+        if (distance < (Math.pow((TREBLE_RADIUS - player.first9avg()), 2))) {
+            return true;
+        }
+        var r = generateRandom();
+        return r >= player.accuracyTreble();
     }
 }

@@ -1,10 +1,7 @@
 package be.rommens.darts.simulator.model;
 
-import static java.util.Objects.requireNonNullElse;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class Turn {
@@ -13,7 +10,7 @@ public class Turn {
     private Throw firstThrow;
     private Throw secondThrow;
     private Throw thirdThrow;
-    private boolean isBusted;
+    private boolean isBusted = false;
 
     public Turn(Integer startScore) {
         this.startScore = startScore;
@@ -36,19 +33,19 @@ public class Turn {
     public void markAsBusted(Dart dart) {
         switch (dart){
             case FIRST -> {
-                firstThrow = new Throw(firstThrow.score(), firstThrow.isFinishingThrow(), firstThrow.isFinishingShot(), true);
-                secondThrow = new Throw(0, firstThrow.isFinishingThrow(), firstThrow.isFinishingShot(), true);
-                thirdThrow = new Throw(0, firstThrow.isFinishingThrow(), firstThrow.isFinishingShot(), true);
+                firstThrow = new Throw(null, firstThrow.score(), firstThrow.isFinishingThrow(), firstThrow.isFinishingShot(), true, false);
+                secondThrow = new Throw(null, 0, firstThrow.isFinishingThrow(), firstThrow.isFinishingShot(), true, false);
+                thirdThrow = new Throw(null, 0, firstThrow.isFinishingThrow(), firstThrow.isFinishingShot(), true, false);
             }
             case SECOND -> {
-                firstThrow = new Throw(firstThrow.score(), firstThrow.isFinishingThrow(), firstThrow.isFinishingShot(), true);
-                secondThrow = new Throw(secondThrow.score(), secondThrow.isFinishingThrow(), secondThrow.isFinishingShot(), true);
-                thirdThrow = new Throw(0, secondThrow.isFinishingThrow(), secondThrow.isFinishingShot(), true);
+                firstThrow = new Throw(null, firstThrow.score(), firstThrow.isFinishingThrow(), firstThrow.isFinishingShot(), true, false);
+                secondThrow = new Throw(null, secondThrow.score(), secondThrow.isFinishingThrow(), secondThrow.isFinishingShot(), true, false);
+                thirdThrow = new Throw(null, 0, secondThrow.isFinishingThrow(), secondThrow.isFinishingShot(), true, false);
             }
             case THIRD -> {
-                firstThrow = new Throw(firstThrow.score(), firstThrow.isFinishingThrow(), firstThrow.isFinishingShot(), true);
-                secondThrow = new Throw(secondThrow.score(), secondThrow.isFinishingThrow(), secondThrow.isFinishingShot(), true);
-                thirdThrow = new Throw(thirdThrow.score(), thirdThrow.isFinishingThrow(), thirdThrow.isFinishingShot(), true);
+                firstThrow = new Throw(null, firstThrow.score(), firstThrow.isFinishingThrow(), firstThrow.isFinishingShot(), true, false);
+                secondThrow = new Throw(null, secondThrow.score(), secondThrow.isFinishingThrow(), secondThrow.isFinishingShot(), true, false);
+                thirdThrow = new Throw(null, thirdThrow.score(), thirdThrow.isFinishingThrow(), thirdThrow.isFinishingShot(), true, false);
             }
         }
         isBusted = true;
@@ -67,7 +64,7 @@ public class Turn {
     }
 
     public boolean isTonPlus() {
-        return getScoreThrown() >= 100 && getScoreThrown() < 140;
+        return getScoreThrown() >= 100;
     }
 
     public Integer getStartScore() {
@@ -87,6 +84,18 @@ public class Turn {
 
     public Stream<Throw> getThrows() {
         return Stream.of(firstThrow, secondThrow, thirdThrow).filter(Objects::nonNull);
+    }
+
+    public Optional<Throw> getPreviousThrow(Dart dart) {
+        return switch (dart) {
+            case FIRST -> Optional.empty();
+            case SECOND -> Optional.of(firstThrow);
+            case THIRD -> Optional.of(secondThrow);
+        };
+    }
+
+    public boolean isBusted() {
+        return isBusted;
     }
 
     private static int getScore(Throw throwToAdd) {

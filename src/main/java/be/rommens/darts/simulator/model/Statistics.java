@@ -39,6 +39,34 @@ public class Statistics {
         System.out.println("100+ : " + numberTonPlus);
     }
 
+    public int getNumberOfDartsThrown() {
+        return numberOfDartsThrown;
+    }
+
+    public double getAverage() {
+        return average;
+    }
+
+    public int getFirst9Average() {
+        return first9Average;
+    }
+
+    public double getCheckoutPercentage() {
+        return checkoutPercentage;
+    }
+
+    public int getNumber180s() {
+        return number180s;
+    }
+
+    public int getNumber140s() {
+        return number140s;
+    }
+
+    public int getNumberTonPlus() {
+        return numberTonPlus;
+    }
+
     private static int calculateNumberOfDartsThrown(List<Turn> turns) {
         return turns.stream().map(Turn::getNumberOfDartsThrown).reduce(0, Integer::sum);
     }

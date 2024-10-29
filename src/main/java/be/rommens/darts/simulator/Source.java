@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 public class Source {
 
     private final Player[] players = {
-            new Player("Humphries",25,50,95,42,44, 43),
-            new Player("Joe",41,50,95,38,42, 39)
+            new Player("Humphries",25,50,95,42,44, 43, 108),
+            new Player("Joe",41,50,95,38,42, 39, 108)
     };
 
     private final Score[] scores = {new Score(), new Score()};
@@ -111,7 +111,7 @@ public class Source {
             for (Dart dart : Dart.values()) {
                 int scoreCurrPlayer = scores[currentPlayer].getCurrentGameScore();  //score of current player
 
-                scoreAchieved = simulator.throwDart(dart, scoreCurrPlayer, currentTurnPlayer);  //returns score hit
+                scoreAchieved = simulator.throwDart(null, dart, scoreCurrPlayer, currentTurnPlayer);  //returns score hit
 
                 System.out.println(String.format("%s : %s - %s", currentPlayer, scoreCurrPlayer, scoreAchieved.score()));
 

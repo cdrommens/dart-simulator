@@ -5,19 +5,15 @@ import static java.lang.Math.toDegrees;
 import be.rommens.darts.simulator.model.Player;
 import be.rommens.darts.simulator.model.Statistics;
 import be.rommens.darts.simulator.model.Turn;
-import be.rommens.darts.simulator.strategy.polar.TrebleThrowSimulationStrategy;
+import be.rommens.darts.simulator.strategy.polar.WriteUtils;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Stroke;
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import javax.swing.ImageIcon;
 import org.apache.commons.geometry.euclidean.twod.PolarCoordinates;
 import org.apache.commons.geometry.euclidean.twod.Vector2D;
@@ -41,54 +37,74 @@ import org.springframework.test.context.ActiveProfiles;
 public class legSimulatorPolarTest {
 
     @Autowired
-    private legSimulator legSimulator;
+    private LegSimulator legSimulator;
 
     @Test
-    void singleGameTest() {
-        var leg = legSimulator.playGame(new Player("Humphries",25,50,95,42,44, 43));
+    void singleGameTest() throws IOException {
+        var leg = legSimulator.playLeg(new Player("Humphries",25,50,95,42,44, 43, 108));
+        XYSeries series = new XYSeries("hits");
         for(Turn turn : leg) {
             System.out.println(turn.getStartScore() + " : " + turn.getScoreThrown() + " (" + turn + ")");
+            turn.getThrows().forEach(t -> series.add(Math.toDegrees(t.point().getAzimuth()), t.point().getRadius()));
         }
         Statistics.calculate(leg).write();
+        WriteUtils.draw(series);
     }
 
     @Test
     void testBatch() {
         List<Statistics> statistics = new ArrayList<>();
-        for(int i = 0; i < 10; i++) {
-            var result = legSimulator.playGame(new Player("Humphries",25,50,95,42,44, 43));
+        for(int i = 0; i < 100; i++) {
+            var result = legSimulator.playLeg(new Player("Humphries",25,50,95,42,44, 43, 108));
             statistics.add(Statistics.calculate(result));
         }
+        System.out.println("First 9 avg : "+ statistics.stream().mapToDouble(Statistics::getFirst9Average).average().orElseThrow());
+        System.out.println("Avg : " + statistics.stream().mapToDouble(Statistics::getAverage).average().orElseThrow());
+        System.out.println("checkout : "+ statistics.stream().mapToDouble(Statistics::getCheckoutPercentage).average().orElseThrow());
     }
 
 
     // Test for drawing circle
     @Test
     void testTrebleSpread() throws IOException {
-        XYSeriesCollection dataset = new XYSeriesCollection();
-        XYSeries series1 = new XYSeries("Boys");
-        for (int i=0; i < 100000; i++) {
+        XYSeries series = new XYSeries("Test");
+        int num = 0;
+        while (num < 9) {
             var aim = Vector2D.of(103,0);
-            //var aim = Vector2D.of(-61,-83);
             var point = Vector2D.of(
-                    ThreadLocalRandom.current().nextGaussian(aim.getX(), 20),
-                    ThreadLocalRandom.current().nextGaussian(aim.getY(), 20));
-
+                    ThreadLocalRandom.current().nextGaussian(aim.getX(), 15),
+                    ThreadLocalRandom.current().nextGaussian(aim.getY(), 15));
 
             PolarCoordinates result2 = PolarCoordinates.fromCartesian(point);
-
             PolarCoordinates center = PolarCoordinates.fromCartesian(aim);
             var center2d = center.toCartesian();
             var punt2d = result2.toCartesian();
-            var rek = ((punt2d.getX() - center2d.getX())*(punt2d.getX() - center2d.getX())) + ((punt2d.getY() -center2d.getY())*(punt2d.getY() -center2d.getY()));
-            if (rek < (16*16)) {
-                series1.add(toDegrees(result2.getAzimuth()), result2.getRadius());
+
+            var rek = Math.pow((punt2d.getX() - center2d.getX()),2) + Math.pow((punt2d.getY() - center2d.getY()),2);
+            //for example, humphries first 9 108.89
+            if (rek < (Math.pow((20-10.889), 2))) {
+                series.add(toDegrees(result2.getAzimuth()), result2.getRadius());
+                num++;
             } else {
-                System.out.println("out");
+                var r = ThreadLocalRandom.current().nextInt(100);
+                // for example, humphries treble hit % 43
+                if (r < 43) {
+                    System.out.println("out en again");
+                } else {
+                    series.add(toDegrees(result2.getAzimuth()), result2.getRadius());
+                    System.out.println("out but counts");
+                    num++;
+                }
             }
         }
+        draw(series);
+    }
 
-        dataset.addSeries(series1);
+
+    private static void draw(XYSeries series) throws IOException {
+        XYSeriesCollection dataset = new XYSeriesCollection();
+
+        dataset.addSeries(series);
 
         ValueAxis radiusAxis = new NumberAxis();
         radiusAxis.setUpperBound(226);
@@ -102,7 +118,7 @@ public class legSimulatorPolarTest {
                 0.0f, new float[] {0.0f, 1e10f}, 1.0f );
         renderer.setSeriesStroke(0, dashedStroke);
 
-        ImageIcon icon = new ImageIcon(PolarCoordinatesService.class.getClassLoader().getResource("img.png"));
+        ImageIcon icon = new ImageIcon(LegSimulator.class.getClassLoader().getResource("img.png"));
 
         PolarPlot plot = new PolarPlot(dataset, radiusAxis, renderer);
         plot.setCounterClockwise(false);
