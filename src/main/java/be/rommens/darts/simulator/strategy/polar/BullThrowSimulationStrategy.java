@@ -31,7 +31,7 @@ public class BullThrowSimulationStrategy extends PolarThrowSimulationStrategy {
         } while (!isInRadius(COORDINATES.get(scoreToAim), result, player));
 
         if (result.getRadius() <= 6.35) {
-            return new Throw(result, 50, true, false, false, scoreToAim == 50);
+            return new Throw(result, 50, true, isFinishingShot, false, scoreToAim == 50);
         }
         if (result.getRadius() > 6.35 && result.getRadius() <= 15.9) {
             return new Throw(result, 25, false, false, false, scoreToAim == 25);
