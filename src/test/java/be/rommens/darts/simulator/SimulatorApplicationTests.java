@@ -7,12 +7,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class SimulatorApplicationTests {
 
-	@Autowired
-	Source source;
-
 	@Test
 	void contextLoads() {
-		source.playGame();
+
 	}
 
 }

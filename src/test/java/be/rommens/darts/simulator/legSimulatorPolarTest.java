@@ -2,6 +2,7 @@ package be.rommens.darts.simulator;
 
 import static java.lang.Math.toDegrees;
 
+import be.rommens.darts.simulator.model.Leg;
 import be.rommens.darts.simulator.model.Player;
 import be.rommens.darts.simulator.model.Statistics;
 import be.rommens.darts.simulator.model.Turn;
@@ -43,11 +44,11 @@ public class legSimulatorPolarTest {
     void singleGameTest() throws IOException {
         var leg = legSimulator.playLeg(new Player("Humphries",25,50,95,42,44, 43, 108));
         XYSeries series = new XYSeries("hits");
-        for(Turn turn : leg) {
+        for(Turn turn : leg.turns()) {
             System.out.println(turn.getStartScore() + " : " + turn.getScoreThrown() + " (" + turn + ")");
             turn.getThrows().forEach(t -> series.add(Math.toDegrees(t.point().getAzimuth()), t.point().getRadius()));
         }
-        Statistics.calculate(leg).write();
+        leg.statistics().write();
         WriteUtils.draw(series);
     }
 
@@ -56,7 +57,7 @@ public class legSimulatorPolarTest {
         List<Statistics> statistics = new ArrayList<>();
         for(int i = 0; i < 100; i++) {
             var result = legSimulator.playLeg(new Player("Humphries",25,50,95,42,44, 43, 108));
-            statistics.add(Statistics.calculate(result));
+            statistics.add(result.statistics());
         }
         System.out.println("First 9 avg : "+ statistics.stream().mapToDouble(Statistics::getFirst9Average).average().orElseThrow());
         System.out.println("Avg : " + statistics.stream().mapToDouble(Statistics::getAverage).average().orElseThrow());
@@ -65,13 +66,11 @@ public class legSimulatorPolarTest {
 
     @Test
     void testBatchUntilError() {
-        Statistics statistics;
-        List<Turn> result;
+        Leg leg;
         do {
-            result = legSimulator.playLeg(new Player("Humphries",25,50,95,42,44, 43, 108));
-            statistics = Statistics.calculate(result);
-            statistics.write();
-        } while (statistics.getNumberOfDartsThrown() < 22);
+            leg = legSimulator.playLeg(new Player("Humphries",25,50,95,42,44, 43, 108));
+            leg.statistics().write();
+        } while (leg.statistics().getNumberOfDartsThrown() < 22);
     }
 
 

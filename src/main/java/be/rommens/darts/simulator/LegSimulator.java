@@ -1,6 +1,7 @@
 package be.rommens.darts.simulator;
 
 import be.rommens.darts.simulator.model.Dart;
+import be.rommens.darts.simulator.model.Leg;
 import be.rommens.darts.simulator.model.Player;
 import be.rommens.darts.simulator.model.Statistics;
 import be.rommens.darts.simulator.model.Throw;
@@ -24,14 +25,14 @@ public class LegSimulator {
     }
 
     // Explicit use of the first 9 average and not the general average so that double misses can happen
-    public List<Turn> playLeg(Player player) {
+    public Leg playLeg(Player player) {
         List<Turn> turns;
         Statistics statistics;
         do {
             turns = simulateLeg(player);
             statistics = Statistics.calculate(turns);
         } while (statistics.getFirst9Average() < player.getMinimumAverageCurrentLevel());
-        return turns;
+        return new Leg(player, turns);
     }
 
     private List<Turn> simulateLeg(Player player) {

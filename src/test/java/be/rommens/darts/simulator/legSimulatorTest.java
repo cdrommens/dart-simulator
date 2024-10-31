@@ -20,10 +20,10 @@ public class legSimulatorTest {
     @Test
     void singleGameTest() {
         var leg = legSimulator.playLeg(new Player("Humphries",25,50,95,42,44, 43, 108));
-        for(Turn turn : leg) {
+        for(Turn turn : leg.turns()) {
             System.out.println(turn.getStartScore() + " : " + turn.getScoreThrown() + " (" + turn + ")");
         }
-        Statistics.calculate(leg).write();
+        leg.statistics().write();
     }
 
     @Test
@@ -31,7 +31,7 @@ public class legSimulatorTest {
         List<Statistics> statistics = new ArrayList<>();
         for(int i = 0; i < 10; i++) {
             var result = legSimulator.playLeg(new Player("Humphries",25,50,95,42,44, 43, 108));
-            statistics.add(Statistics.calculate(result));
+            statistics.add(result.statistics());
         }
     }
 

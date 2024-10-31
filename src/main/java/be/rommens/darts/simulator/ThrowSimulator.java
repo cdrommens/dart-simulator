@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 //TODO : introduce levels : lower the aimed hit rate with a certain % AND play with the rest of probability (0.2 etc)
 //TODO : introduce hit % for doubles on 3, 2 and 1 dart checkout
-//TODO : fix to many loose darts
 
 @Component
 public class ThrowSimulator {
