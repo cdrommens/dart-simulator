@@ -40,27 +40,10 @@ public class LegSimulator {
         while (!finished) {
             Turn turn = new Turn(initializeScore(turns));
             log.debug("New turn : {}", turn);
-
-            for (Dart dart : Dart.values()) {
-                int scoreCurrPlayer = turn.getScoreLeft();
-
-                Throw simulatedThrow = simulator.throwDart(turn, dart, scoreCurrPlayer, player);  //returns score hit
-                turn.addThrow(dart, simulatedThrow);
-
-                log.debug(turn.toString());
-                log.debug("{} | {} : {} - {} {}", dart.ordinal()+1, player.name(), scoreCurrPlayer, simulatedThrow.score(), simulatedThrow.isFinishingShot());
-
-                int remainingScore = scoreCurrPlayer - simulatedThrow.score();
-                if ((remainingScore == 1 || remainingScore < 0) || (remainingScore == 0 && !simulatedThrow.isFinishingThrow())) {
-                    turn.markAsBusted(dart);
-                    log.debug("busted, so break");
-                    break;
-                }
-                if (remainingScore == 0) {
-                    finished = true;
-                    log.debug("finished, so break");
-                    break;
-                }
+            turn.throwDarts(player, simulator);
+            if (turn.getScoreLeft() == 0) {
+                finished = true;
+                log.debug("finished");
             }
             turns.add(turn);
         }

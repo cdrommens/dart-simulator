@@ -25,7 +25,7 @@ public class DoubleThrowSimulationStrategyTest {
                     20,
                     new Player("Humphries",25,50,95,42,44.42, 43, 108.89),
                     true);
-            turn.addThrow(dart, result);
+            //turn.addThrow(dart, result);
         }
         System.out.println(turn);
     }
@@ -43,7 +43,7 @@ public class DoubleThrowSimulationStrategyTest {
                         20,
                         new Player("Humphries", 25, 50, 95, 42, 44.42, 43, 108.89),
                         true);
-                turn.addThrow(dart, result);
+                //turn.addThrow(dart, result);
                 series.add(Math.toDegrees(result.point().getAzimuth()), result.point().getRadius());
                 if (result.isFinishingThrow()) {
                     break;
@@ -70,7 +70,7 @@ public class DoubleThrowSimulationStrategyTest {
                             20,
                             new Player("Humphries", 25, 50, 95, 42, 44.42, 43, 108.89),
                             false);
-                    turn.addThrow(dart, result);
+                    //turn.addThrow(dart, result);
                     series.add(Math.toDegrees(result.point().getAzimuth()), result.point().getRadius());
                 }
                 turns.add(turn);

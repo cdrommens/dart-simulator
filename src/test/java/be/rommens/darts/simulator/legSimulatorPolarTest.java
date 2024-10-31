@@ -63,6 +63,17 @@ public class legSimulatorPolarTest {
         System.out.println("checkout : "+ statistics.stream().mapToDouble(Statistics::getCheckoutPercentage).average().orElseThrow());
     }
 
+    @Test
+    void testBatchUntilError() {
+        Statistics statistics;
+        List<Turn> result;
+        do {
+            result = legSimulator.playLeg(new Player("Humphries",25,50,95,42,44, 43, 108));
+            statistics = Statistics.calculate(result);
+            statistics.write();
+        } while (statistics.getNumberOfDartsThrown() < 22);
+    }
+
 
     // Test for drawing circle
     @Test

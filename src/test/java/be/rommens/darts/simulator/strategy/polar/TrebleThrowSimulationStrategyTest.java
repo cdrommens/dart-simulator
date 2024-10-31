@@ -25,7 +25,7 @@ public class TrebleThrowSimulationStrategyTest {
                     20,
                     new Player("Humphries",25,50,95,42,44.42, 43, 108.89),
                     false);
-            turn.addThrow(dart, result);
+            //turn.addThrow(dart, result);
         }
         System.out.println(turn);
         assertThat(turn.getScoreThrown()).isGreaterThan(0);
@@ -44,7 +44,7 @@ public class TrebleThrowSimulationStrategyTest {
                         20,
                         new Player("Humphries", 25, 50, 95, 42, 44.42, 43, 108.89),
                         false);
-                turn.addThrow(dart, result);
+                //turn.addThrow(dart, result);
                 series.add(Math.toDegrees(result.point().getAzimuth()), result.point().getRadius());
             }
             turns.add(turn);
@@ -71,7 +71,7 @@ public class TrebleThrowSimulationStrategyTest {
                             20,
                             new Player("Humphries", 25, 50, 95, 42, 44.42, 43, 108.89),
                             false);
-                    turn.addThrow(dart, result);
+                    //turn.addThrow(dart, result);
                     series.add(Math.toDegrees(result.point().getAzimuth()), result.point().getRadius());
                 }
                 turns.add(turn);
