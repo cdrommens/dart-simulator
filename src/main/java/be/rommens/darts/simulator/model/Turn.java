@@ -1,6 +1,5 @@
 package be.rommens.darts.simulator.model;
 
-import be.rommens.darts.simulator.LegSimulator;
 import be.rommens.darts.simulator.ThrowSimulator;
 import java.util.Objects;
 import java.util.Optional;

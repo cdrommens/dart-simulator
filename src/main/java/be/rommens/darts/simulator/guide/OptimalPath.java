@@ -64,7 +64,7 @@ public class OptimalPath {
     }
 
     public void write() {
-        optimalPath.values().stream().forEach(System.out::println);
+        optimalPath.values().forEach(System.out::println);
     }
 
     private int decideOptimalAim(int startScore, List<Integer> bogeyNumbers) {

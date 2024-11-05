@@ -2,7 +2,6 @@ package be.rommens.darts.simulator;
 
 import static java.lang.Math.toDegrees;
 
-import be.rommens.darts.simulator.model.Throw;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Stroke;
@@ -28,7 +27,6 @@ import org.jfree.chart.ui.Align;
 import org.jfree.chart.ui.RectangleInsets;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -69,8 +67,7 @@ public class PolarCoordinatesServiceTest {
         System.out.printf("%s;%s,%s;%s\n", 25,
                 new BigDecimal(String.valueOf(single.getX())).setScale(0, RoundingMode.HALF_UP),
                 new BigDecimal(String.valueOf(single.getY())).setScale(0, RoundingMode.HALF_UP),
-                "0,0",
-                "");
+                "0,0");
     }
 
     @Test

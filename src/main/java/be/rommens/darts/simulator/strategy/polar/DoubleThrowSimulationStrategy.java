@@ -1,9 +1,5 @@
 package be.rommens.darts.simulator.strategy.polar;
 
-import static be.rommens.darts.simulator.model.Dart.FIRST;
-import static be.rommens.darts.simulator.model.Dart.SECOND;
-import static be.rommens.darts.simulator.model.Dart.THIRD;
-
 import be.rommens.darts.simulator.model.Dart;
 import be.rommens.darts.simulator.model.Player;
 import be.rommens.darts.simulator.model.Throw;
@@ -51,7 +47,7 @@ public class DoubleThrowSimulationStrategy extends PolarThrowSimulationStrategy 
 
         PolarCoordinates result;
         do {
-            var previousRadius = turn.getPreviousThrow(dart).map(Throw::point).map(PolarCoordinates::getRadius).orElse(0.0);
+            double previousRadius = turn.getPreviousThrow(dart).map(Throw::point).map(PolarCoordinates::getRadius).orElse(0.0);
             Vector2D r = previousRadius >= 170 && previousRadius <= 180 ? generateRandomVector(5, COORDINATES.get(scoreToAim)) : generateRandomVector(COORDINATES.get(scoreToAim), player);
             result = PolarCoordinates.fromCartesian(r);
         } while (!isInRadius(COORDINATES.get(scoreToAim), result, player));
