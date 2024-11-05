@@ -26,7 +26,7 @@ public class BullThrowSimulationStrategy extends PolarThrowSimulationStrategy {
     public Throw simulateThrow(Turn turn, Dart dart, int scoreToAim, Player player, boolean isFinishingShot) {
         PolarCoordinates result;
         do {
-            Vector2D r = generateRandomVector(COORDINATES.get(scoreToAim));
+            Vector2D r = generateRandomVector(COORDINATES.get(scoreToAim), player);
             result = PolarCoordinates.fromCartesian(r);
         } while (!isInRadius(COORDINATES.get(scoreToAim), result, player));
 

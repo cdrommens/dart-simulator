@@ -41,7 +41,7 @@ public class SingleThrowSimulationStrategy extends PolarThrowSimulationStrategy 
 
     @Override
     public Throw simulateThrow(Turn turn, Dart dart, int scoreToAim, Player player, boolean isFinishingShot) {
-        Vector2D r = generateRandomVector(COORDINATES.get(scoreToAim));
+        Vector2D r = generateRandomVector(COORDINATES.get(scoreToAim), player);
 
         PolarCoordinates result = PolarCoordinates.fromCartesian(r);
 

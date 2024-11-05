@@ -8,6 +8,7 @@ public class Statistics {
     private double average;
     private int first9Average;
     private double checkoutPercentage;
+    private int numberOfDartsThrownAtDouble;
     private int number180s;
     private int number140s;
     private int numberTonPlus;
@@ -23,6 +24,7 @@ public class Statistics {
         statistics.average = calculateAverage(turns);
         statistics.first9Average = calculateFirst9Average(turns);
         statistics.checkoutPercentage = calculateCheckoutPercentage(turns);
+        statistics.numberOfDartsThrownAtDouble = calculateNumberOfDartsThrownAtDouble(turns);
         statistics.number180s = calculateNumberOf180s(turns);
         statistics.number140s = calculateNumberOf140s(turns);
         statistics.numberTonPlus = calculateNumberOfTonPlus(turns);
@@ -33,7 +35,7 @@ public class Statistics {
         System.out.println("Number of darts thrown : " + numberOfDartsThrown);
         System.out.println("Average : " + average);
         System.out.println("First 9 Average : " + first9Average);
-        System.out.println("Checkout% : " + checkoutPercentage);
+        System.out.println("Checkout% : " + checkoutPercentage + " (1/" + numberOfDartsThrownAtDouble + ")");
         System.out.println("180's : " + number180s);
         System.out.println("140's : " + number140s);
         System.out.println("100+ : " + numberTonPlus);
@@ -87,6 +89,13 @@ public class Statistics {
                 .flatMap(Turn::getThrows)
                 .filter(Throw::isFinishingShot)
                 .toList().size()) * 100;
+    }
+
+    private static int calculateNumberOfDartsThrownAtDouble(List<Turn> turns) {
+        return turns.stream()
+                .flatMap(Turn::getThrows)
+                .filter(Throw::isFinishingShot)
+                .toList().size();
     }
 
     private static int calculateNumberOf180s(List<Turn> turns) {

@@ -10,8 +10,6 @@ import org.apache.commons.geometry.euclidean.twod.Vector2D;
 
 public abstract class PolarThrowSimulationStrategy implements ThrowSimulationStrategy {
 
-    private static final int STANDARD_DEVIATION = 10;
-
     private final int[] SEGMENT_VALUES = { 20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5, 20 };
 
     //TODO : accuracy
@@ -21,8 +19,8 @@ public abstract class PolarThrowSimulationStrategy implements ThrowSimulationStr
                 ThreadLocalRandom.current().nextGaussian(aim.getY(), stddev));
     }
 
-    Vector2D generateRandomVector(Vector2D aim) {
-        return generateRandomVector(STANDARD_DEVIATION, aim);
+    Vector2D generateRandomVector(Vector2D aim, Player player) {
+        return generateRandomVector(calculateStandardDeviation(player), aim);
     }
 
     int getFieldFromPolarCoordinates(PolarCoordinates polar) {
@@ -50,5 +48,27 @@ public abstract class PolarThrowSimulationStrategy implements ThrowSimulationStr
      *
      * - als pijl in treble valt, kans groter maken dat de volgende er ook in zit?
      */
+
+    private int calculateStandardDeviation(Player player) {
+        if (player.first9avg() <= 45.00) {
+            // 35-45 is considered a beginner average
+            return 55;
+        } else if (player.first9avg() <= 55.00) {
+            // 46-55 pub player
+            return 40;
+        } else if (player.first9avg() <= 70.00) {
+            // super league / county player
+            return 25;
+        } else if (player.first9avg() <= 85.00) {
+            // PDC Challenge Tour
+            return 17;
+        } else if (player.first9avg() <= 99.00) {
+            // PDC Tour
+            return 11;
+        } else {
+            // world class
+            return 10;
+        }
+    }
 
 }

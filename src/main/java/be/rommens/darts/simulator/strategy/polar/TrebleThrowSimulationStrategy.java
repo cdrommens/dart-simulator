@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component(AimType.TREBLE)
 public class TrebleThrowSimulationStrategy extends PolarThrowSimulationStrategy {
 
-    private static final int TREBLE_RADIUS = 16+4;
+    private static final int TREBLE_RADIUS = 16;
 
     private static final Map<Integer, Vector2D> COORDINATES = Map.ofEntries(
 
@@ -47,7 +47,7 @@ public class TrebleThrowSimulationStrategy extends PolarThrowSimulationStrategy 
         PolarCoordinates result;
         do {
             boolean isPreviousTreble = turn.getPreviousThrow(dart).map(Throw::isHitAsIntended).orElse(false);
-            Vector2D r = isPreviousTreble ? generateRandomVector(5, COORDINATES.get(scoreToAim)) : generateRandomVector(COORDINATES.get(scoreToAim));
+            Vector2D r = isPreviousTreble ? generateRandomVector(5, COORDINATES.get(scoreToAim)) : generateRandomVector(COORDINATES.get(scoreToAim), player);
             result = PolarCoordinates.fromCartesian(r);
         } while (!isInRadius(COORDINATES.get(scoreToAim), result, player));
 
@@ -77,10 +77,54 @@ public class TrebleThrowSimulationStrategy extends PolarThrowSimulationStrategy 
         var center2d = center.toCartesian();
         var dart2d = dart.toCartesian();
         var distance = Math.pow((dart2d.getX() - center2d.getX()),2) + Math.pow((dart2d.getY() - center2d.getY()),2);
-        if (distance < (Math.pow((TREBLE_RADIUS - player.first9avg()), 2))) {
+        if (distance < (Math.pow((TREBLE_RADIUS + calculateRadius(player) - player.first9avg()), 2))) {
             return true;
         }
         var r = generateRandom();
         return r >= player.accuracyTreble();
+    }
+
+    private int calculateRadius(Player player) {
+        if (player.first9avg() <= 45.00) {
+            // 35-45 is considered a beginner average
+            return 40;
+        } else if (player.first9avg() <= 55.00) {
+            // 46-55 pub player
+            return 20;
+        } else if (player.first9avg() <= 70.00) {
+            // super league / county player
+            return 17;
+        } else if (player.first9avg() <= 85.00) {
+            // PDC Challenge Tour
+            return 8;
+        } else if (player.first9avg() <= 99.00) {
+            // PDC Tour
+            return 5;
+        } else {
+            // world class
+            return 4;
+        }
+    }
+
+    private int calculateStandardDeviationTreble(Player player) {
+        if (player.first9avg() <= 45.00) {
+            // 35-45 is considered a beginner average
+            return 55;
+        } else if (player.first9avg() <= 55.00) {
+            // 46-55 pub player
+            return 40;
+        } else if (player.first9avg() <= 70.00) {
+            // super league / county player
+            return 20;
+        } else if (player.first9avg() <= 85.00) {
+            // PDC Challenge Tour
+            return 12;
+        } else if (player.first9avg() <= 99.00) {
+            // PDC Tour
+            return 5;
+        } else {
+            // world class
+            return 5;
+        }
     }
 }

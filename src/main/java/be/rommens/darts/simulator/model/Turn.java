@@ -66,7 +66,7 @@ public class Turn {
     }
 
     public Integer getScoreThrown() {
-        return getScore(firstThrow) + getScore(secondThrow) + getScore(thirdThrow);
+        return isBusted ? 0 : getScore(firstThrow) + getScore(secondThrow) + getScore(thirdThrow);
     }
 
     public Integer getNumberOfDartsThrown() {
