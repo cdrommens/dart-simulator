@@ -33,7 +33,7 @@ public class PolarCoordinatesService {
         int index = Math.floorDiv(new BigDecimal(String.valueOf(single20.getAzimuth())).setScale(0, RoundingMode.HALF_UP).intValue() + 9, 18);
         int number = SEGMENT_VALUES[index];
 
-        /*PolarCoordinates bull = PolarCoordinates.fromCartesian(0, 0);
+        PolarCoordinates bull = PolarCoordinates.fromCartesian(0, 0);
         PolarCoordinates outerbull1 = PolarCoordinates.fromCartesian(0, 6.35);
         PolarCoordinates bullcenter = PolarCoordinates.fromCartesian(0, 11.25);
         PolarCoordinates outerbull2 = PolarCoordinates.fromCartesian(0, 15.9);
@@ -44,7 +44,7 @@ public class PolarCoordinatesService {
         PolarCoordinates outercenter = PolarCoordinates.fromCartesian(0, 134.5);
         PolarCoordinates outer = PolarCoordinates.fromCartesian(0, 162);
         PolarCoordinates doublecenter = PolarCoordinates.fromCartesian(0, 166);
-        PolarCoordinates doubled = PolarCoordinates.fromCartesian(0, 170);*/
+        PolarCoordinates doubled = PolarCoordinates.fromCartesian(0, 170);
         PolarCoordinates p = PolarCoordinates.fromCartesian(103,0);
         PolarCoordinates p2 = PolarCoordinates.fromCartesian(102, 16);
         PolarCoordinates p3 = PolarCoordinates.fromCartesian(102, -16);
@@ -58,7 +58,7 @@ public class PolarCoordinatesService {
         series1.add(toDegrees(p3.getAzimuth()), p3.getRadius());
         series1.add(toDegrees(p4.getAzimuth()), p4.getRadius());
         series1.add(toDegrees(p5.getAzimuth()), p5.getRadius());
-        /*series1.add(toDegrees(bull.getAzimuth()), bull.getRadius());
+        series1.add(toDegrees(bull.getAzimuth()), bull.getRadius());
         series1.add(toDegrees(bullcenter.getAzimuth()), bullcenter.getRadius());
         series1.add(toDegrees(inner.getAzimuth()), inner.getRadius());
         series1.add(toDegrees(innercenter.getAzimuth()), innercenter.getRadius());
@@ -67,7 +67,7 @@ public class PolarCoordinatesService {
         series1.add(toDegrees(outercenter.getAzimuth()), outercenter.getRadius());
         series1.add(toDegrees(outer.getAzimuth()), outer.getRadius());
         series1.add(toDegrees(doublecenter.getAzimuth()), doublecenter.getRadius());
-        series1.add(toDegrees(doubled.getAzimuth()), doubled.getRadius());*/
+        series1.add(toDegrees(doubled.getAzimuth()), doubled.getRadius());
 
         dataset.addSeries(series1);
 

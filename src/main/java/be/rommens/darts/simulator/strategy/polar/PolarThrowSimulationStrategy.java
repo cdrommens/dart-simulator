@@ -10,7 +10,7 @@ import org.apache.commons.geometry.euclidean.twod.Vector2D;
 
 public abstract class PolarThrowSimulationStrategy implements ThrowSimulationStrategy {
 
-    private final int[] SEGMENT_VALUES = { 20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5, 20 };
+    private static final int[] SEGMENT_VALUES = { 20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5, 20 };
 
     //TODO : accuracy
     Vector2D generateRandomVector(double stddev, Vector2D aim) {

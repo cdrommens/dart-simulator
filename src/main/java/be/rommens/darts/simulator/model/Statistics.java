@@ -1,8 +1,12 @@
 package be.rommens.darts.simulator.model;
 
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Statistics {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Statistics.class);
 
     private int numberOfDartsThrown;
     private double average;
@@ -32,13 +36,13 @@ public class Statistics {
     }
 
     public void write() {
-        System.out.println("Number of darts thrown : " + numberOfDartsThrown);
-        System.out.println("Average : " + average);
-        System.out.println("First 9 Average : " + first9Average);
-        System.out.println("Checkout% : " + checkoutPercentage + " (1/" + numberOfDartsThrownAtDouble + ")");
-        System.out.println("180's : " + number180s);
-        System.out.println("140's : " + number140s);
-        System.out.println("100+ : " + numberTonPlus);
+        LOGGER.info("Number of darts thrown : {}", numberOfDartsThrown);
+        LOGGER.info("Average : {}", average);
+        LOGGER.info("First 9 Average : {}", first9Average);
+        LOGGER.info("Checkout% : {} (1/{})", checkoutPercentage, numberOfDartsThrownAtDouble);
+        LOGGER.info("180's : {}", number180s);
+        LOGGER.info("140's : {}", number140s);
+        LOGGER.info("100+ : {}", numberTonPlus);
     }
 
     public int getNumberOfDartsThrown() {

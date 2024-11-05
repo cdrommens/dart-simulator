@@ -105,26 +105,4 @@ public class TrebleThrowSimulationStrategy extends PolarThrowSimulationStrategy 
             return 4;
         }
     }
-
-    private int calculateStandardDeviationTreble(Player player) {
-        if (player.first9avg() <= 45.00) {
-            // 35-45 is considered a beginner average
-            return 55;
-        } else if (player.first9avg() <= 55.00) {
-            // 46-55 pub player
-            return 40;
-        } else if (player.first9avg() <= 70.00) {
-            // super league / county player
-            return 20;
-        } else if (player.first9avg() <= 85.00) {
-            // PDC Challenge Tour
-            return 12;
-        } else if (player.first9avg() <= 99.00) {
-            // PDC Tour
-            return 5;
-        } else {
-            // world class
-            return 5;
-        }
-    }
 }
