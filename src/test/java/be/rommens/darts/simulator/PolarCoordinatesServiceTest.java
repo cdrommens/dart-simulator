@@ -2,6 +2,7 @@ package be.rommens.darts.simulator;
 
 import static java.lang.Math.toDegrees;
 
+import be.rommens.darts.simulator.strategy.polar.PolarCoordinatesService;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Stroke;

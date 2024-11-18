@@ -1,9 +1,13 @@
 package be.rommens.darts.simulator;
 
+import be.rommens.darts.simulator.model.Bull;
+import be.rommens.darts.simulator.model.Dart;
 import be.rommens.darts.simulator.model.Leg;
 import be.rommens.darts.simulator.model.Player;
 import be.rommens.darts.simulator.model.Statistics;
+import be.rommens.darts.simulator.model.Throw;
 import be.rommens.darts.simulator.model.Turn;
+import be.rommens.darts.simulator.strategy.AimType;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -31,6 +35,15 @@ public class LegSimulator {
             statistics = Statistics.calculate(turns);
         } while (statistics.getFirst9Average() < player.getMinimumAverageCurrentLevel());
         return new Leg(player, turns);
+    }
+
+    public Bull throwBull(Player player) {
+        Throw bullThrow = simulator.throwDart(null, Dart.FIRST, 50, player);
+        return switch (bullThrow.score()) {
+            case 25 -> Bull.SINGLE_HIT;
+            case 50 -> Bull.DOUBLE_HIT;
+            default -> Bull.NO_HIT;
+        };
     }
 
     private List<Turn> simulateLeg(Player player) {

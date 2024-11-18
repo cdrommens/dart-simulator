@@ -1,6 +1,9 @@
 package be.rommens.darts.simulator;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import be.rommens.darts.simulator.guide.OptimalPath;
+import be.rommens.darts.simulator.model.Bull;
 import be.rommens.darts.simulator.model.Dart;
 import be.rommens.darts.simulator.model.Player;
 import be.rommens.darts.simulator.model.Statistics;
@@ -41,9 +44,9 @@ public class LegSimulatorPolarTest {
         System.out.printf("First 9 avg : %s%n", first9);
         System.out.printf("Avg : %s%n", avg);
         System.out.printf("checkout : %s%n", checkout);
-        Assertions.assertThat(first9).isBetween(87.0, 130.0);
-        Assertions.assertThat(avg).isGreaterThan(87.00);
-        Assertions.assertThat(checkout).isBetween(35.0, 100.0);
+        assertThat(first9).isBetween(87.0, 130.0);
+        assertThat(avg).isGreaterThan(87.00);
+        assertThat(checkout).isBetween(35.0, 100.0);
     }
 
     @Test
@@ -62,9 +65,9 @@ public class LegSimulatorPolarTest {
         System.out.printf("First 9 avg : %s%n", first9);
         System.out.printf("Avg : %s%n", avg);
         System.out.printf("checkout : %s%n", checkout);
-        Assertions.assertThat(first9).isBetween(87.0, 130.0);
-        Assertions.assertThat(avg).isGreaterThan(87.00);
-        Assertions.assertThat(checkout).isBetween(35.0, 100.0);
+        assertThat(first9).isBetween(87.0, 130.0);
+        assertThat(avg).isGreaterThan(87.00);
+        assertThat(checkout).isBetween(35.0, 100.0);
     }
 
     @Test
@@ -84,9 +87,9 @@ public class LegSimulatorPolarTest {
         System.out.printf("First 9 avg : %s%n", first9);
         System.out.printf("Avg : %s%n", avg);
         System.out.printf("checkout : %s%n", checkout);
-        Assertions.assertThat(first9).isBetween(87.0, 92.0);
-        Assertions.assertThat(avg).isGreaterThan(65.00);
-        Assertions.assertThat(checkout).isBetween(35.0, 100.0);
+        assertThat(first9).isBetween(87.0, 92.0);
+        assertThat(avg).isGreaterThan(65.00);
+        assertThat(checkout).isBetween(35.0, 100.0);
     }
 
     @Test
@@ -105,9 +108,16 @@ public class LegSimulatorPolarTest {
         System.out.printf("First 9 avg : %s%n", first9);
         System.out.printf("Avg : %s%n", avg);
         System.out.printf("checkout : %s%n", checkout);
-        Assertions.assertThat(first9).isBetween(0.0, 76.0);
-        Assertions.assertThat(avg).isGreaterThan(35.00);
-        Assertions.assertThat(checkout).isBetween(15.0, 35.0);
+        assertThat(first9).isBetween(0.0, 76.0);
+        assertThat(avg).isGreaterThan(35.00);
+        assertThat(checkout).isBetween(15.0, 35.0);
+    }
+
+    @Test
+    void testThrowBull() {
+        var player = new Player("Schoenmakers",15.00, 18.18, 18.79, 18.18, 66.77);
+        var result = legSimulator.throwBull(player);
+        assertThat(result).isInstanceOf(Bull.class);
     }
 
     @Test

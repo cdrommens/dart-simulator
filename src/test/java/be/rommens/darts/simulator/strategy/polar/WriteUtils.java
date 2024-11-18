@@ -1,6 +1,5 @@
 package be.rommens.darts.simulator.strategy.polar;
 
-import be.rommens.darts.simulator.PolarCoordinatesService;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Stroke;

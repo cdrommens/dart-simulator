@@ -1,4 +1,4 @@
-package be.rommens.darts.simulator;
+package be.rommens.darts.simulator.strategy.polar;
 
 import static java.lang.Math.toDegrees;
 
