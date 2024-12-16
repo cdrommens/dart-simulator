@@ -18,7 +18,7 @@ public class GameSimulatorTest {
         var player1 = new Player("Humphries",24.35, 41.69, 44.49, 42.94, 108.94);
         var player2 = new Player("Whitlock",40.00, 36.79, 35.32, 37.04, 97.66);
 
-        gameSimulator.simulate(player1, player2);
+        gameSimulator.simulate(player1, player2, 11);
     }
 
 }
