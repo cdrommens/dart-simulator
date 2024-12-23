@@ -67,18 +67,18 @@ public class Player implements DynamoDbEntity {
         }
 
         public static DartItem convertToEntity(Player p) {
-            return new DartItem(
-                    p.getPrimaryKey(),
-                    p.getSortKey(),
-                    p.getPlayerId()
-            );
+            DartItem dartItem = new DartItem();
+            dartItem.setPrimaryKey(p.getPrimaryKey());
+            dartItem.setSortKey(p.getSortKey());
+            dartItem.setPlayerName(p.getPlayerId());
+            return dartItem;
         }
 
         public static Player convertFromEntity(DartItem dartItem) {
             Player player = new Player();
-            player.setPrimaryKey(dartItem.primaryKey());
-            player.setSortKey(dartItem.sortKey());
-            player.setName(dartItem.playerName());
+            player.setPrimaryKey(dartItem.getPrimaryKey());
+            player.setSortKey(dartItem.getSortKey());
+            player.setName(dartItem.getPlayerName());
             return player;
         }
     }

@@ -7,17 +7,44 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbParti
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 
 @DynamoDbBean
-public record DartItem(
-        @DynamoDbPartitionKey String primaryKey,
-        @DynamoDbSortKey String sortKey,
-        /* Player */
-        @DynamoDbAttribute("playerName") String playerName
-) implements DynamoDbEntity {
+public class DartItem implements DynamoDbEntity {
+
+    private String primaryKey;
+    private String sortKey;
+    /* Player */
+    private String playerName;
 
     public static DartItem convertFrom(DynamoDbEntity entity) {
         return switch (entity) {
             case Player player -> Player.Converter.convertToEntity(player);
             default -> throw new IllegalStateException("No type");
         };
+    }
+
+    @DynamoDbPartitionKey
+    public String getPrimaryKey() {
+        return primaryKey;
+    }
+
+    public void setPrimaryKey(String primaryKey) {
+        this.primaryKey = primaryKey;
+    }
+
+    @DynamoDbSortKey
+    public String getSortKey() {
+        return sortKey;
+    }
+
+    public void setSortKey(String sortKey) {
+        this.sortKey = sortKey;
+    }
+
+    @DynamoDbAttribute("playerName")
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
     }
 }
