@@ -80,6 +80,7 @@ For the center, the center of the top green is chosen, meaning **11**
 This should make sure that good bull throwers have more advantage, taking into account 1 player characteristic:
 - bull accuracy
 
+
 ## Technical Setup
 
 ### Local DynamoDB setup

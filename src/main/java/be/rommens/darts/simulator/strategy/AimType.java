@@ -5,4 +5,8 @@ public class AimType {
     public static final String DOUBLE = "double";
     public static final String TREBLE = "treble";
     public static final String BULL = "bull";
+
+    private AimType() {
+        // private constructor to hide the implicit public one.
+    }
 }

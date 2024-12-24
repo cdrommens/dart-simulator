@@ -1,13 +1,18 @@
 package be.rommens.darts.simulator.model;
 
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Statistics {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Statistics.class);
 
     private int numberOfDartsThrown;
     private double average;
     private int first9Average;
     private double checkoutPercentage;
+    private int numberOfDartsThrownAtDouble;
     private int number180s;
     private int number140s;
     private int numberTonPlus;
@@ -23,6 +28,7 @@ public class Statistics {
         statistics.average = calculateAverage(turns);
         statistics.first9Average = calculateFirst9Average(turns);
         statistics.checkoutPercentage = calculateCheckoutPercentage(turns);
+        statistics.numberOfDartsThrownAtDouble = calculateNumberOfDartsThrownAtDouble(turns);
         statistics.number180s = calculateNumberOf180s(turns);
         statistics.number140s = calculateNumberOf140s(turns);
         statistics.numberTonPlus = calculateNumberOfTonPlus(turns);
@@ -30,13 +36,41 @@ public class Statistics {
     }
 
     public void write() {
-        System.out.println("Number of darts thrown : " + numberOfDartsThrown);
-        System.out.println("Average : " + average);
-        System.out.println("First 9 Average : " + first9Average);
-        System.out.println("Checkout% : " + checkoutPercentage);
-        System.out.println("180's : " + number180s);
-        System.out.println("140's : " + number140s);
-        System.out.println("100+ : " + numberTonPlus);
+        LOGGER.info("Number of darts thrown : {}", numberOfDartsThrown);
+        LOGGER.info("Average : {}", average);
+        LOGGER.info("First 9 Average : {}", first9Average);
+        LOGGER.info("Checkout% : {} (1/{})", checkoutPercentage, numberOfDartsThrownAtDouble);
+        LOGGER.info("180's : {}", number180s);
+        LOGGER.info("140's : {}", number140s);
+        LOGGER.info("100+ : {}", numberTonPlus);
+    }
+
+    public int getNumberOfDartsThrown() {
+        return numberOfDartsThrown;
+    }
+
+    public double getAverage() {
+        return average;
+    }
+
+    public int getFirst9Average() {
+        return first9Average;
+    }
+
+    public double getCheckoutPercentage() {
+        return checkoutPercentage;
+    }
+
+    public int getNumber180s() {
+        return number180s;
+    }
+
+    public int getNumber140s() {
+        return number140s;
+    }
+
+    public int getNumberTonPlus() {
+        return numberTonPlus;
     }
 
     private static int calculateNumberOfDartsThrown(List<Turn> turns) {
@@ -59,6 +93,13 @@ public class Statistics {
                 .flatMap(Turn::getThrows)
                 .filter(Throw::isFinishingShot)
                 .toList().size()) * 100;
+    }
+
+    private static int calculateNumberOfDartsThrownAtDouble(List<Turn> turns) {
+        return turns.stream()
+                .flatMap(Turn::getThrows)
+                .filter(Throw::isFinishingShot)
+                .toList().size();
     }
 
     private static int calculateNumberOf180s(List<Turn> turns) {
