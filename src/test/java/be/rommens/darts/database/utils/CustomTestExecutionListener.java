@@ -2,21 +2,35 @@ package be.rommens.darts.database.utils;
 
 import com.amazonaws.services.dynamodbv2.local.main.ServerRunner;
 import com.amazonaws.services.dynamodbv2.local.server.DynamoDBProxyServer;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Locale;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.TestExecutionListener;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
-import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
+import software.amazon.awssdk.services.dynamodb.model.AttributeDefinition;
+import software.amazon.awssdk.services.dynamodb.model.CreateTableRequest;
+import software.amazon.awssdk.services.dynamodb.model.KeySchemaElement;
+import software.amazon.awssdk.services.dynamodb.model.KeyType;
+import software.amazon.awssdk.services.dynamodb.model.ProvisionedThroughput;
+import software.amazon.awssdk.services.dynamodb.model.ScalarAttributeType;
 
 @ContextConfiguration(classes = {DynamoDbLocalConfiguration.class})
 public class CustomTestExecutionListener implements TestExecutionListener, Ordered {
 
     @Autowired
     private DynamoDbEnhancedClient enhancedClient;
+
+    @Autowired
+    private DynamoDbClient dynamoDbClient;
 
     private static DynamoDBProxyServer server;
     private static final String PORT = "8000";
@@ -28,11 +42,39 @@ public class CustomTestExecutionListener implements TestExecutionListener, Order
         testContext.getApplicationContext() .getAutowireCapableBeanFactory().autowireBean(this);
         server = ServerRunner.createServerFromCommandLineArgs(LOCAL_ARGS);
         server.start();
+
         DynamoDbTest dynamoDbTest = testContext.getTestClass().getAnnotation(DynamoDbTest.class);
-        Class<?> schema = dynamoDbTest.tableSchema()[0];
+        Class<?> schema = dynamoDbTest.tableName()[0];
         String tableName = schema.getSimpleName().toLowerCase(Locale.ROOT);
-        DynamoDbTable<?> table = enhancedClient.table(tableName, TableSchema.fromBean(dynamoDbTest.tableSchema()[0]));
-        table.createTable();
+        String pk = findFieldWithAnnotation(schema, DynamoDbPartitionKey.class);
+        String sk = findFieldWithAnnotation(schema, DynamoDbSortKey.class);
+
+        CreateTableRequest request = CreateTableRequest.builder()
+                .attributeDefinitions(
+                        AttributeDefinition.builder()
+                                .attributeName(pk)
+                                .attributeType(ScalarAttributeType.S)
+                                .build(),
+                        AttributeDefinition.builder()
+                                .attributeName(sk)
+                                .attributeType(ScalarAttributeType.S)
+                                .build())
+                .keySchema(
+                        KeySchemaElement.builder()
+                                .attributeName(pk)
+                                .keyType(KeyType.HASH)
+                                .build(),
+                        KeySchemaElement.builder()
+                                .attributeName(sk)
+                                .keyType(KeyType.RANGE)
+                                .build())
+                .provisionedThroughput(ProvisionedThroughput.builder()
+                        .readCapacityUnits(new Long(10))
+                        .writeCapacityUnits(new Long(10))
+                        .build())
+                .tableName(tableName)
+                .build();
+        dynamoDbClient.createTable(request);
     };
 
     public void prepareTestInstance(TestContext testContext) throws Exception {
@@ -56,4 +98,14 @@ public class CustomTestExecutionListener implements TestExecutionListener, Order
     public int getOrder() {
         return Integer.MAX_VALUE;
     };
+
+    private static String findFieldWithAnnotation(Class<?> schema, Class<? extends Annotation> annotation) {
+        return Arrays.stream(schema.getMethods())
+                .filter(m -> m.isAnnotationPresent(annotation))
+                .map(Method::getName)
+                .map(n -> n.replace("get", ""))
+                .map(StringUtils::uncapitalize)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("No method found with " + annotation));
+    }
 }

@@ -9,6 +9,6 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 @TestExecutionListeners(value = {CustomTestExecutionListener.class, DependencyInjectionTestExecutionListener.class})
 public @interface DynamoDbTest {
 
-    Class<?>[] tableSchema() default {};
+    Class<?>[] tableName() default {};
 
 }

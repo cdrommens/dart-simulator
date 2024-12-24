@@ -1,25 +1,17 @@
-package be.rommens.darts.simulator.scraper;
+package be.rommens.darts.scraper;
 
 import static java.util.Objects.requireNonNull;
 
-import be.rommens.darts.simulator.ThrowSimulator;
 import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
