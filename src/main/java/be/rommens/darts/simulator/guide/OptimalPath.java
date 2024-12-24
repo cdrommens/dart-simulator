@@ -12,18 +12,22 @@ import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class OptimalPath {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(OptimalPath.class);
+
     private static final List<Integer> BOGEY_NUMBERS_3_DARTS = List.of(349, 348, 346, 345, 343, 342, 339, 169, 168, 166, 165, 163, 162, 159);
     private static final List<Integer> BOGEY_NUMBERS_1_DART = List.of(409, 408, 406, 405, 403, 402, 399,  229, 228, 226, 225, 223, 222, 219);
 
-    private final Map<Integer, Entry> optimalPath;
+    private final Map<Integer, Entry> optimalPathMap;
 
     public OptimalPath() throws URISyntaxException, IOException {
-        optimalPath = Files.readAllLines(Path.of(ThrowSimulator.class.getClassLoader().getResource("optimal_path.csv").toURI()))
+        optimalPathMap = Files.readAllLines(Path.of(ThrowSimulator.class.getClassLoader().getResource("optimal_path.csv").toURI()))
                 .stream()
                 .skip(1)
                 .map(line -> line.split(";", -1))
@@ -33,38 +37,38 @@ public class OptimalPath {
     }
 
     public void fill() {
-        optimalPath.keySet().stream()
+        optimalPathMap.keySet().stream()
                 .sorted(Comparator.reverseOrder())
                         .forEach(key -> {
-                            optimalPath.get(key).secondDart = decideAimSecondDart(key);
-                            optimalPath.get(key).thirdDart = decideAimThirdDart(key);
+                            optimalPathMap.get(key).secondDart = decideAimSecondDart(key);
+                            optimalPathMap.get(key).thirdDart = decideAimThirdDart(key);
                         });
     }
 
     public int decideAim(Dart dart, int s) {
         return switch (dart) {
-            case FIRST -> optimalPath.get(s).getFirstDart();
-            case SECOND -> optimalPath.get(s).getSecondDart();
-            case THIRD -> optimalPath.get(s).getThirdDart();
+            case FIRST -> optimalPathMap.get(s).getFirstDart();
+            case SECOND -> optimalPathMap.get(s).getSecondDart();
+            case THIRD -> optimalPathMap.get(s).getThirdDart();
         };
     }
 
     private int decideAimSecondDart(int startScore) {
-        if (optimalPath.get(startScore).secondDart != 0) {
-            return optimalPath.get(startScore).secondDart;
+        if (optimalPathMap.get(startScore).secondDart != 0) {
+            return optimalPathMap.get(startScore).secondDart;
         }
         return decideOptimalAim(startScore, BOGEY_NUMBERS_1_DART);
     }
 
     private int decideAimThirdDart(int startScore) {
-        if (optimalPath.get(startScore).thirdDart != 0) {
-            return optimalPath.get(startScore).thirdDart;
+        if (optimalPathMap.get(startScore).thirdDart != 0) {
+            return optimalPathMap.get(startScore).thirdDart;
         }
         return decideOptimalAim(startScore, BOGEY_NUMBERS_3_DARTS);
     }
 
     public void write() {
-        optimalPath.values().stream().forEach(System.out::println);
+        optimalPathMap.values().forEach(p -> LOGGER.info(String.valueOf(p)));
     }
 
     private int decideOptimalAim(int startScore, List<Integer> bogeyNumbers) {

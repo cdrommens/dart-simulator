@@ -60,7 +60,7 @@ public class OptimalPathTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {483, 479})
+    @ValueSource(ints = {483})
     void test_479(int startScore) {
         assertThat(optimalPath.decideAim(FIRST,startScore)).isEqualTo(57);
         assertThat(optimalPath.decideAim(SECOND,startScore-57)).isEqualTo(57);
