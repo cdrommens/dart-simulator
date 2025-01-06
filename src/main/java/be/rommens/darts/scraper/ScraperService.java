@@ -19,6 +19,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -37,10 +39,11 @@ public class ScraperService {
 
     public void scrapePlayersAndPriceMoney() throws IOException {
         Map<String, Integer> playerlink = parseDartsOrakelPlayers();
+        playerlink.forEach((k,v) -> System.out.println("=" + k + "="));
 
         Document doc = SSLHelper.getConnection("https://www.dartsrankings.com/").get();
-        //Element table = doc.selectFirst("table#tablesingle|tablechangelive");
-        Element table = doc.selectFirst("table#tableliveETChange");
+        Element table = doc.selectFirst("table#tablesingle");
+        //Element table = doc.selectFirst("table#tableliveETChange");
         Elements rows = table.select("tr");
         List<Player> players = new ArrayList<>();
         for(int i = 1; i < rows.size(); i++) {
@@ -53,14 +56,29 @@ public class ScraperService {
             Detail detail = breakdown(link);
 
             //stats
-            if (!playerlink.containsKey(name.toUpperCase())) {
-                throw new IllegalArgumentException(String.format("Player {} not found", name));
+            String normalizedName = name.replace("'", "&#039;");
+            normalizedName = normalizedName.toUpperCase();
+            normalizedName = normalizedName.replace("MENSUR SULJOVIC", "MENSUR SULJOVIĆ");
+            normalizedName = normalizedName.replace("KAREL SEDLACEK", "KAREL SEDLÁČEK");
+            normalizedName = normalizedName.replace("BORIS KRCMAR", "BORIS KRČMAR");
+            if (!playerlink.containsKey(normalizedName.toUpperCase())) {
+                System.out.println("Player =" + normalizedName.toUpperCase() + "= not found");
+                throw new IllegalArgumentException(String.format("Player ={}= not found", normalizedName));
             }
-            Document docPlayer = SSLHelper.getConnection("https://app.dartsorakel.com/player/stats/" + playerlink.get(name.toUpperCase())).get();
+            System.out.println(name);
+            Document docPlayer = SSLHelper.getConnection("https://app.dartsorakel.com/player/stats/" + playerlink.get(normalizedName.toUpperCase())).get();
             String country = requireNonNull(docPlayer.select("img[src*=/flags/]").last()).attr("alt");
-            String hometownAndBirthDate = ((TextNode)docPlayer.select("span.svg-icon-4").get(1).parent().childNode(2)).text();
-            String hometown = hometownAndBirthDate.split(",")[0].strip();
-            String birthday = hometownAndBirthDate.split(",")[1].strip();
+            Elements hometownAndBirthDateNode = docPlayer.select("span.svg-icon-4");
+            String hometown = "";
+            String birthday = "";
+            if (hometownAndBirthDateNode.size() > 1) {
+                String hometownAndBirthDate = ((TextNode)docPlayer.select("span.svg-icon-4").get(1).parent().childNode(2)).text();
+                String[] hometownAndBirthDateSplit = hometownAndBirthDate.split(",");
+                hometown = hometownAndBirthDate.split(",")[0].strip();
+                if (hometownAndBirthDateSplit.length == 2) {
+                    birthday = hometownAndBirthDate.split(",")[1].strip();
+                }
+            }
             double average = 0.0;
             double first9Average = 0.0;
             for(Element e : docPlayer.select("a:contains(Averages)")) {
@@ -94,7 +112,12 @@ public class ScraperService {
             double startingDouble = 0.0;
             for(Element e : docPlayer.select("a:contains(starting)")) {
                 if(e.text().strip().equals("Starting Double Hit Pcnt")) {
-                    startingDouble = Double.parseDouble(e.parent().parent().children().get(1).text().replace("%", ""));
+                    String start = e.parent().parent().children().get(1).text().replace("%", "");
+                    if (StringUtils.isNotEmpty(start)) {
+                        startingDouble = Double.parseDouble(start);
+                    } else {
+                        startingDouble = accuracyDouble;
+                    }
                 }
             }
 
