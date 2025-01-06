@@ -86,3 +86,7 @@ This should make sure that good bull throwers have more advantage, taking into a
 ### Local DynamoDB setup
 
 To locally browse the DynamoDB database instance, use 
+
+## Build the initial player database
+
+`mvn test -Dtest=ScraperServiceTest#scrapePlayersAndPriceMoneyTest`
