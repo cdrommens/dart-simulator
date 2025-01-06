@@ -35,6 +35,11 @@ public class ScraperService {
     private static final ObjectMapper MAPPER = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
+    private static final List<String> NON_EXISTENT = List.of(
+            "PATRIK KOVACS","ADRIAN LEWIS","DANIEL MARKOVSKY","JANOS VEGSO"
+
+    );
+
     //For all players on dartsorakel and their internal ID's: go to https://app.dartsorakel.com/stats/player, and check result of networkcall https://app.dartsorakel.com/api/stats/player?dateFrom=2023-12-16&dateTo=2024-12-16&rankKey=25&organStat=All&tourns=All&minMatches=200&tourCardYear=&showStatsBreakdown=0&_=1734342354735
 
     public void scrapePlayersAndPriceMoney() throws IOException {
@@ -46,7 +51,7 @@ public class ScraperService {
         //Element table = doc.selectFirst("table#tableliveETChange");
         Elements rows = table.select("tr");
         List<Player> players = new ArrayList<>();
-        for(int i = 1; i < rows.size(); i++) {
+        for(int i = 200; i < rows.size(); i++) {
             Element row = rows.get(i);
             Elements cols = row.select("td");
             String rank = cols.get(0).text();
@@ -61,7 +66,18 @@ public class ScraperService {
             normalizedName = normalizedName.replace("MENSUR SULJOVIC", "MENSUR SULJOVIĆ");
             normalizedName = normalizedName.replace("KAREL SEDLACEK", "KAREL SEDLÁČEK");
             normalizedName = normalizedName.replace("BORIS KRCMAR", "BORIS KRČMAR");
+            normalizedName = normalizedName.replace("RADEK SZAGANSKI", "RADOSLAW SZAGANSKI");
+            normalizedName = normalizedName.replace("DANNY LAUBY", "DANIEL LAUBY JR");
+            normalizedName = normalizedName.replace("FRANZ ROETZSCH", "FRANZ RÖTZSCH");
+            normalizedName = normalizedName.replace("XIAOCHEN ZONG", "ZONG XIAOCHEN");
+            normalizedName = normalizedName.replace("JIRI BREJCHA", "JIRI BRESCHA");
+            normalizedName = normalizedName.replace("RENE EIDAMS", "RENÉ EIDAMS");
+            normalizedName = normalizedName.replace("JODY TOBBACK", "JODY TOBACK");
+            normalizedName = normalizedName.replace("CHRISTIAN GOEDL", "CHRISTIAN GÖDL");
             if (!playerlink.containsKey(normalizedName.toUpperCase())) {
+                if (NON_EXISTENT.contains(normalizedName.toUpperCase())) {
+                    continue;
+                }
                 System.out.println("Player =" + normalizedName.toUpperCase() + "= not found");
                 throw new IllegalArgumentException(String.format("Player ={}= not found", normalizedName));
             }
@@ -97,10 +113,20 @@ public class ScraperService {
                     accuracyDouble = Double.parseDouble(e.parent().parent().children().get(1).text().replace("%", ""));
                 }
                 if(e.text().strip().equals("Bullseye Checkout Pcnt")) {
-                    accuracyBull = Double.parseDouble(e.parent().parent().children().get(1).text().replace("%", ""));
+                    String start = e.parent().parent().children().get(1).text().replace("%", "");
+                    if (StringUtils.isNotEmpty(start)) {
+                        accuracyBull = Double.parseDouble(start);
+                    } else {
+                        accuracyBull = accuracyDouble;
+                    }
                 }
                 if(e.text().strip().equals("Checkout Pcnt 3rd Dart")) {
-                    accuracyDouble3rdDart = Double.parseDouble(e.parent().parent().children().get(1).text().replace("%", ""));
+                    String start = e.parent().parent().children().get(1).text().replace("%", "");
+                    if (StringUtils.isNotEmpty(start)) {
+                        accuracyDouble3rdDart = Double.parseDouble(start);
+                    } else {
+                        accuracyDouble3rdDart = accuracyDouble;
+                    }
                 }
             }
             double accuracyTreble = 0.0;
