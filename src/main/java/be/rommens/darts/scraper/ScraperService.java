@@ -5,6 +5,8 @@ import static java.util.Objects.requireNonNull;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -100,7 +102,9 @@ public class ScraperService {
         }
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(players);
-        System.out.println(json);
+        BufferedWriter writer = new BufferedWriter(new FileWriter("players.json"));
+        writer.write(json);
+        writer.close();
     }
 
     private Map<String, Integer> parseDartsOrakelPlayers() throws IOException {
