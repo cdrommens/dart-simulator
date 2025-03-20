@@ -91,10 +91,15 @@ public class DartsOrakelScraper {
         String birthday = "";
         if (hometownAndBirthDateNode.size() > 1) {
             String hometownAndBirthDate = ((TextNode)docPlayer.select("span.svg-icon-4").get(1).parent().childNode(2)).text();
-            String[] hometownAndBirthDateSplit = hometownAndBirthDate.split(",");
-            hometown = hometownAndBirthDate.split(",")[0].strip();
-            if (hometownAndBirthDateSplit.length == 2) {
-                birthday = hometownAndBirthDate.split(",")[1].strip();
+            if (hometownAndBirthDate.contains(",")) {
+                String[] hometownAndBirthDateSplit = hometownAndBirthDate.split(",");
+                hometown = hometownAndBirthDate.split(",")[0].strip();
+                if (hometownAndBirthDateSplit.length == 2) {
+                    birthday = hometownAndBirthDate.split(",")[1].strip();
+                }
+            } else {
+                String[] birthDate = hometownAndBirthDate.split("\\(");
+                birthday = birthDate[0].strip();
             }
         }
         double average = 0.0;
