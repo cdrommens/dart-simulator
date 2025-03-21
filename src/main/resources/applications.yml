@@ -1,7 +1,0 @@
-spring:
-  application:
-    name: simulator
-  cloud:
-    aws:
-      dynamodb:
-        endpoint: http://localhost:8000/

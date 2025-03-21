@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: simulator
+  datasource:
+    url: jdbc:postgresql://localhost:5432/spufi
+    username: localuser
+    password: postgres
+  docker:
+    compose:
+      enabled: false

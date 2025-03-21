@@ -90,3 +90,5 @@ To locally browse the DynamoDB database instance, use
 ## Build the initial player database
 
 `mvn test -Dtest=ScraperServiceTest#scrapePlayersAndPriceMoneyTest`
+
+https://thorben-janssen.com/java-based-database-migrations-callbacks-flyway/
