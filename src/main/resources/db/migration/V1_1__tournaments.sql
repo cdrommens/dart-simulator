@@ -163,3 +163,31 @@ INSERT INTO TOURNAMENTS (id, shortname, edition, name) VALUES ('PF2023', 'PF', '
 INSERT INTO TOURNAMENTS (id, shortname, edition, name) VALUES ('PF2024', 'PF', '2024', 'Ladbrokes Players Championship Finals');
 INSERT INTO TOURNAMENTS (id, shortname, edition, name) VALUES ('PF2025', 'PF', '2025', 'Ladbrokes Players Championship Finals');
 INSERT INTO TOURNAMENTS (id, shortname, edition, name) VALUES ('MA2025', 'MA', '2025', 'Winmau World Masters');
+
+CREATE TABLE TOURNAMENTS_PLAYERS (
+     id                          TEXT                        NOT NULL,
+     tournament_id               TEXT                        NOT NULL,
+     player_id                   TEXT                        NOT NULL,
+     seed                        INT                         NOT NULL DEFAULT 0,
+
+     CONSTRAINT PK_qualified PRIMARY KEY (id),
+     CONSTRAINT FK_tournaments_qualified FOREIGN KEY (tournament_id) REFERENCES TOURNAMENTS(id),
+     CONSTRAINT FK_players_qualified FOREIGN KEY (player_id) REFERENCES PLAYERS(id)
+);
+
+CREATE TABLE TOURNAMENTS_RESULTS (
+     id                          TEXT                        NOT NULL,
+     tournament_id               TEXT                        NOT NULL,
+     player_id                   TEXT                        NOT NULL,
+     date                        DATE                        NOT NULL,
+     result                      TEXT                        ,
+     money                       DECIMAL(6,2)                NOT NULL DEFAULT 0,
+     pro_tour_oom                BOOLEAN                     NOT NULL,
+     european_tour_oom           BOOLEAN                     NOT NULL,
+     pc_oom                      BOOLEAN                     NOT NULL,
+
+
+     CONSTRAINT PK_result PRIMARY KEY (id),
+     CONSTRAINT FK_tournaments_results FOREIGN KEY (tournament_id) REFERENCES TOURNAMENTS(id),
+     CONSTRAINT FK_players_results FOREIGN KEY (player_id) REFERENCES PLAYERS(id)
+);

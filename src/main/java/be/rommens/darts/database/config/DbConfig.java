@@ -2,6 +2,8 @@ package be.rommens.darts.database.config;
 
 import be.rommens.darts.database.domain.Player;
 import be.rommens.darts.database.domain.Tournament;
+import be.rommens.darts.database.domain.TournamentQualifiedPlayer;
+import be.rommens.darts.database.domain.TournamentResult;
 import java.util.UUID;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +29,26 @@ public class DbConfig {
                 tournament.setId(tournament.getKey() + tournament.getYear());
             }
             return tournament;
+        };
+    }
+
+    @Bean
+    BeforeConvertCallback<TournamentQualifiedPlayer> beforeConvertCallbackTournamentQualifiedPlayer() {
+        return (tournamentQualifiedPlayer) -> {
+            if (tournamentQualifiedPlayer.getId() == null) {
+                tournamentQualifiedPlayer.setId(UUID.randomUUID().toString());
+            }
+            return tournamentQualifiedPlayer;
+        };
+    }
+
+    @Bean
+    BeforeConvertCallback<TournamentResult> beforeConvertCallbackTournamentResult() {
+        return (tournamentResult) -> {
+            if (tournamentResult.getId() == null) {
+                tournamentResult.setId(UUID.randomUUID().toString());
+            }
+            return tournamentResult;
         };
     }
 
