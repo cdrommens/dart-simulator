@@ -1,6 +1,9 @@
 package be.rommens.darts.database.domain;
 
 public enum RoundResult {
+    GROUP_FOURTH,
+    GROUP_THIRD,
+    GROUP_WINNER,
     FIRST_ROUND,
     SECOND_ROUND,
     THIRD_ROUND,

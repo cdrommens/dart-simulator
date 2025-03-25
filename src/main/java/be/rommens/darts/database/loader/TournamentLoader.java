@@ -46,7 +46,12 @@ public class TournamentLoader {
                     .findFirst().orElseThrow(() -> new IllegalStateException("Could not find player with name " + orderOfMeritScrapeResult.name()));
             List<TournamentQualifiedPlayer> qualifiedPlayersToAdd = new ArrayList<>();
             List<TournamentResult> results = new ArrayList<>();
-            for (Breakdown breakdown : orderOfMeritScrapeResult.detail().breakdowns().stream().filter(b -> !b.money().equals("-")).toList()) {
+            //Remove all results from after WC2025 since the game will start from there
+            List<Breakdown> breakdowns = orderOfMeritScrapeResult.detail().breakdowns().stream()
+                    .filter(b -> LocalDate.parse(b.date(), DateTimeFormatter.ofPattern("yyyy.MM.dd")).isBefore(LocalDate.of(2025, 1, 4)))
+                    .filter(b -> !b.money().equals("-"))
+                    .toList();
+            for (Breakdown breakdown : breakdowns) {
                 String tournamentKey = Tournament.getKey(breakdown.tournament(), breakdown.date().substring(0,4));
                 qualifiedPlayersToAdd.add(TournamentQualifiedPlayer.builder()
                         .tournamentId(tournaments.get(tournamentKey).getId())
@@ -91,10 +96,9 @@ public class TournamentLoader {
             case "WC" -> mapWcResult(money);
             case "UK" -> mapUkResult(money);
             case "WM" -> mapWmResult(money);
-            case "GS" -> null;
+            case "GS" -> mapGsResult(money);
             case "GP" -> mapGpResult(money);
             case "PF" -> mapPfResult(money);
-            case "MA" -> null;
             case "EC" -> mapEcResult(money);
             case "PC" -> key.endsWith("2023") ? mapPc2023Result(money) : mapPcResult(money);
             case "ET" -> mapEtResult(money);
@@ -220,6 +224,24 @@ public class TournamentLoader {
             case "12" -> RoundResult.RUNNER_UP;
             case "30" -> RoundResult.WINNER;
             default -> throw new IllegalStateException("Unexpected value at ET: " + money);
+        };
+    }
+
+    private static RoundResult mapGsResult(String money) {
+        return switch (money) {
+            case "5" -> RoundResult.GROUP_FOURTH;
+            case "8" -> RoundResult.GROUP_THIRD;
+            case "12.25" -> RoundResult.SECOND_ROUND; //Second in group
+            case "15.75" -> RoundResult.SECOND_ROUND; //First in group but lost in next round
+            case "25" -> RoundResult.QUARTER_FINAL;
+            case "28.5" -> RoundResult.QUARTER_FINAL;
+            case "50" -> RoundResult.SEMI_FINAL;
+            case "53.5" -> RoundResult.SEMI_FINAL;
+            case "70" -> RoundResult.RUNNER_UP;
+            case "73.5" -> RoundResult.RUNNER_UP;
+            case "150" -> RoundResult.WINNER;
+            case "153.5" -> RoundResult.WINNER;
+            default -> throw new IllegalStateException("Unexpected value at GS: " + money);
         };
     }
 
