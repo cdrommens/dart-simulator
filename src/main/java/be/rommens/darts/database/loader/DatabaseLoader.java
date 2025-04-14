@@ -34,9 +34,10 @@ public class DatabaseLoader {
         if (event.getApplicationContext().getEnvironment().acceptsProfiles(Profiles.of("local"))) {
             List<Player> players = playersLoader.loadPlayers();
             tournamentLoader.loadTournamentQualifiedPlayers(players);
-            exportToCsv("players2.csv", players);
-            exportToCsv("tournamentResults2.csv", tournamentResultRepository.getAllOrderedByDate());
-            //orderOfMeritLoader.loadOrderOfMerit(players);
+            //exportToCsv("players2.csv", players);
+            //exportToCsv("tournamentResults2.csv", tournamentResultRepository.getAllOrderedByDate());
+            orderOfMeritLoader.loadMainOrderOfMerit(players);
+            orderOfMeritLoader.loadProTourOrderOfMerit(players);
         }
     }
 

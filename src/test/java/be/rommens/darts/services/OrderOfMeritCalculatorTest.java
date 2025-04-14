@@ -27,7 +27,7 @@ public class OrderOfMeritCalculatorTest {
     private OrderOfMeritCalculator orderOfMeritCalculator;
 
     @Test
-    void iets() throws IOException {
+    void testMainOrderOfMeritCalculator() throws IOException {
         File playersTestFile = resourceLoader.getResource("classpath:/services/players.csv").getFile();
         File tournamentResultsTestFile = resourceLoader.getResource("classpath:/services/tournamentResults.csv").getFile();
 
