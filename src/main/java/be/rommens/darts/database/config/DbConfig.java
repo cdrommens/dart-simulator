@@ -1,5 +1,6 @@
 package be.rommens.darts.database.config;
 
+import be.rommens.darts.database.domain.OrderOfMerit;
 import be.rommens.darts.database.domain.Player;
 import be.rommens.darts.database.domain.Tournament;
 import be.rommens.darts.database.domain.TournamentQualifiedPlayer;
@@ -49,6 +50,16 @@ public class DbConfig {
                 tournamentResult.setId(UUID.randomUUID().toString());
             }
             return tournamentResult;
+        };
+    }
+
+    @Bean
+    BeforeConvertCallback<OrderOfMerit> beforeConvertCallbackOrderOfMeritResult() {
+        return (orderOfMerit) -> {
+            if (orderOfMerit.getId() == null) {
+                orderOfMerit.setId(orderOfMerit.getOomType().toString() + orderOfMerit.getRank());
+            }
+            return orderOfMerit;
         };
     }
 
